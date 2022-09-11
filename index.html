@@ -58,31 +58,31 @@
             </table>
         </div>
     </main>
-    <div class="modal-overlay hidden">
+    <div class="modal-overlay">
         <div class="modal">
             <h2>New Album</h2>
             <form name="add-album" id="add-album">
                 <div>
                     <label for="new-title">Artist</label>
-                    <input type="text" name="title" id="new-title" placeholder="e.g. The Beatles" required>
+                    <input type="text" name="title" id="new-title" placeholder="e.g. The Beatles" autofocus>
                 </div>
                 <div>
                     <label for="new-artist">Title</label>
-                    <input type="text" name="artist" id="new-artist" placeholder="e.g. Revolver" required>
+                    <input type="text" name="artist" id="new-artist" placeholder="e.g. Revolver">
                 </div>
                 <div>
                     <label for="new-release-year">Release year</label>
-                    <input type="number" name="release-year" id="new-release-year" placeholder="e.g. 1966">
+                    <input type="number" name="release_year" id="new-release-year" placeholder="e.g. 1966">
                 </div>
                 <div>
                     <p>Do you own a copy?</p>
                     <div>
-                        <input type="radio" name="owns-copy" id="owns-true" value="true">
+                        <input type="radio" name="owned" id="owns-true" value="true">
                         <label for="owns-true">Yes</label>
 
                     </div>
                     <div>
-                        <input type="radio" name="owns-copy" id="owns-false" value="false" checked>
+                        <input type="radio" name="owned" id="owns-false" value="false" checked>
                         <label for="owns-false">No</label>
                     </div>
                 </div>
