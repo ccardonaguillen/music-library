@@ -1,0 +1,177 @@
+:root {
+    font-size: 62.5%;
+    font-family: Montserrat, Verdana, Geneva, Tahoma, sans-serif;
+    --main-color: #EAEAEA;
+    --secondary-color: #B9C1DF;
+    --accent-color: #2B303A; /* #75061F */
+    --text-main-color: #000000;
+    --text-secondary-color: rgb(65, 65, 65);
+    --text-accent-color: #FFFFFF;
+    --shadow-dark: rgba(0, 0, 0, 0.8);
+    --shadow-light: rgba(120, 120, 120, 0.8);
+    --max-width: min(1000px, 90vw);
+
+}
+
+ /* GENERAL SETTINGS */
+
+a {
+    text-decoration: none;
+}
+
+body {
+    display: grid;
+    grid-template-rows: 120px 1fr;
+    margin: 0;
+
+}
+/* HEADER */
+
+header {
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    background-color: var(--secondary-color);
+    width: 100%;
+    box-shadow: 0px 3px 10px var(--shadow-light);
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    width: var(--max-width)
+}
+
+header a {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+}
+
+header img {
+    height: 6rem;
+    filter: drop-shadow(1px 1px 1px var(--shadow-dark));
+}
+
+header h1 {
+    margin: 0;
+    padding: 0;
+    font-size: 5rem;
+    font-weight: 600;
+    color:var(--text-main-color);
+    text-shadow: 1px 1px 2px var(--shadow-dark);
+}
+
+
+/* MAIN */
+
+main {
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+    background-color: var(--main-color);
+}
+
+main .container {
+    width: var(--max-width);
+    margin: 50px auto;
+}
+
+/* LIBRARY CONTROLS */
+
+.controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.controls form {
+    display: grid;
+    grid-auto-flow: column;
+    align-items: center;
+}
+
+/* MUSIC LIBRARY TABLE */
+main table {
+    font-size: 1.8rem;
+    text-align: left;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    height: 4.5rem;
+}
+
+th:nth-of-type(3),
+td:nth-of-type(3),
+th:nth-of-type(4),
+td:nth-of-type(4) {
+    text-align: center;
+}
+
+
+th {
+    border-bottom: var(--shadow-light) 2px solid;
+    font-weight: 600;
+}
+
+tbody > tr:hover {
+    background-color: lightgrey;
+}
+
+
+
+/* MODAL */
+
+.modal-overlay {
+    z-index: 20;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    height: 100%;
+    width: 100%;
+}
+
+.modal {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    padding: 40px 30px;
+    border-radius: 10px;
+    background-color: var(--main-color);
+    font-size: 1.6rem;
+}
+
+.modal h2 {
+    margin: 0;
+    font-size: 2.5rem;
+}
+
+.modal input {
+    /* appearance: none; */
+}
+
+.modal input[type="text"],
+.modal input[type="number"] {
+    display: block;
+    -moz-appearance: textfield;
+}
+
+/* Remove input[type="number"] control button */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
+
+.hidden {
+    display: none !important;
+}

@@ -1,12 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Music Library | The Odin Project</title>
+    <link rel="stylesheet" href="./style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200..900" rel="stylesheet">
+    <script src="./script.js" defer></script>
 </head>
+
 <body>
-    
+    <header>
+        <div class="container">
+            <a href="./index.html" target="">
+                <img src="./images/book-music.svg" alt="Music Library Hero" id="hero-logo">
+                <h1>Music Library</h1>
+            </a>
+            <a href="#" target="" title="Github Code">
+                <img src="./images/github-icon.svg" alt="Github" id="github-hero">
+            </a>
+        </div>
+    </header>
+    <main>
+        <div class="container">
+            <div class="controls">
+                <form name="filter-by" action="#" method="post">
+                    <label for="filter-value">
+                        Filter by:
+                    </label>
+                    <select name="filter" id="filter">
+                        <option value="artist">Artist</option>
+                        <option value="released">Release year</option>
+                        <option value="owned">Owned</option>
+                        <option value="format">Format</option>
+                    </select>
+                    <input type="text" name="filter-value" id="filter-value">
+                    <button type="submit">Apply filter</button>
+                </form>
+                <button id="open-modal">
+                    New album
+                </button>
+            </div>
+            <table id="music-library">
+                <thead class="library-header">
+                    <tr>
+                        <th>Title</th>
+                        <th>Artist</th>
+                        <th>Released</th>
+                        <th>Owned</th>
+                        <th>Format</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </main>
+    <div class="modal-overlay hidden">
+        <div class="modal">
+            <h2>New Album</h2>
+            <form name="add-album" id="add-album">
+                <div>
+                    <label for="new-title">Artist</label>
+                    <input type="text" name="title" id="new-title" placeholder="e.g. The Beatles" required>
+                </div>
+                <div>
+                    <label for="new-artist">Title</label>
+                    <input type="text" name="artist" id="new-artist" placeholder="e.g. Revolver" required>
+                </div>
+                <div>
+                    <label for="new-release-year">Release year</label>
+                    <input type="number" name="release-year" id="new-release-year" placeholder="e.g. 1966">
+                </div>
+                <div>
+                    <p>Do you own a copy?</p>
+                    <div>
+                        <input type="radio" name="owns-copy" id="owns-true" value="true">
+                        <label for="owns-true">Yes</label>
+
+                    </div>
+                    <div>
+                        <input type="radio" name="owns-copy" id="owns-false" value="false" checked>
+                        <label for="owns-false">No</label>
+                    </div>
+                </div>
+                <div>
+                    <label for="format">If so, in which format?</label>
+                    <div>
+                        <input type="checkbox" name="format" id="cd" value="CD">
+                        <label for="cd">CD</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" name="format" id="vynil" value="Vynil">
+                        <label for="vynil">Vynil</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" name="format" id="casette" value="Casette">
+                        <label for="casette">Casette</label>
+                    </div>
+                    <div>
+                        <input type="checkbox" name="format" id="other" value="Other">
+                        <label for="other">Other</label>
+                    </div>
+                </div>
+                <button type="submit">Submit</button>
+                <button type="reset">Clear form</button>
+            </form>
+        </div>
+    </div>
 </body>
+
 </html>
