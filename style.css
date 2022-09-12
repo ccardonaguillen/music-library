@@ -1,9 +1,9 @@
 :root {
-    font-size: 62.5%;
-    font-family: Montserrat, Verdana, Geneva, Tahoma, sans-serif;
+    --default-font-family: Montserrat, Verdana, Geneva, Tahoma, sans-serif;
     --main-color: #EAEAEA;
     --secondary-color: #B9C1DF;
-    --accent-color: #2B303A; /* #75061F */
+    --accent-color: darkslategrey;
+    /* #75061F */
     --text-main-color: #000000;
     --text-secondary-color: rgb(65, 65, 65);
     --text-accent-color: #FFFFFF;
@@ -11,9 +11,11 @@
     --shadow-light: rgba(120, 120, 120, 0.8);
     --max-width: min(1000px, 90vw);
 
+    font-size: 62.5%;
+    font-family: var(--default-font-family);
 }
 
- /* GENERAL SETTINGS */
+/* GENERAL SETTINGS */
 
 a {
     text-decoration: none;
@@ -25,6 +27,31 @@ body {
     margin: 0;
 
 }
+
+.hidden {
+    display: none !important;
+}
+
+.interactive {
+    width: 120px;
+    font-weight: 700;
+    font-size: 1.6rem;
+    font-family: var(--default-font-family);
+    padding: 0.7rem 1.2rem;
+    border-radius: 5px;
+    border: 2px solid var(--accent-color);
+}
+
+.img-button {
+    appearance: none;
+    background-color: #00000000;
+    background-repeat: none;
+    border: none;
+    margin: 0;
+    padding: 0;
+    cursor: pointer;
+}
+
 /* HEADER */
 
 header {
@@ -60,7 +87,7 @@ header h1 {
     padding: 0;
     font-size: 5rem;
     font-weight: 600;
-    color:var(--text-main-color);
+    color: var(--text-main-color);
     text-shadow: 1px 1px 2px var(--shadow-dark);
 }
 
@@ -101,8 +128,17 @@ main table {
     border-collapse: collapse;
 }
 
-th, td {
-    height: 4.5rem;
+th,
+td {
+    padding: 1.5rem 0rem 1.5rem 4.8rem;
+}
+
+th:nth-of-type(6),
+td:nth-of-type(6) {
+    width: 2.5rem;
+    margin: 0;
+    padding: 0;
+    padding-right: 1rem;
 }
 
 th:nth-of-type(3),
@@ -112,16 +148,25 @@ td:nth-of-type(4) {
     text-align: center;
 }
 
+/* Apply only to first two columns */
+td:nth-of-type(-n+2) {
+    text-transform: capitalize;
+}
 
 th {
     border-bottom: var(--shadow-light) 2px solid;
     font-weight: 600;
 }
 
-tbody > tr:hover {
+tbody>tr:hover {
     background-color: lightgrey;
 }
 
+.remove-album {
+    height: 2.3rem;
+    width: 2.3rem;
+    background-image: url(./images/delete.svg);
+}
 
 
 /* MODAL */
@@ -142,15 +187,33 @@ tbody > tr:hover {
     top: 50%;
     transform: translate(-50%, -50%);
     width: 300px;
-    padding: 40px 30px;
+    padding: 35px 40px;
     border-radius: 10px;
     background-color: var(--main-color);
     font-size: 1.6rem;
 }
 
 .modal h2 {
-    margin: 0;
-    font-size: 2.5rem;
+    margin: 0 0 1.5rem;
+    font-size: 3rem;
+}
+
+#close-modal {
+    position: fixed;
+    top: calc(50% - 265px);
+    left: calc(50% + 140px);
+    width: 30px;
+    height: 30px;
+    background-image: url(./images/close.svg);
+}
+
+.modal label {
+    font-weight: 500;
+    font-size: 1.8rem;
+}
+
+.modal form> div {
+    margin-top: 1.8rem;
 }
 
 .modal input {
@@ -159,19 +222,72 @@ tbody > tr:hover {
 
 .modal input[type="text"],
 .modal input[type="number"] {
-    display: block;
     -moz-appearance: textfield;
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    margin-top: 0.3rem;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 6px;
+    box-shadow: 1px 2px 2px var(--shadow-light) inset;
+    font-family: var(--default-font-family);
+    font-size: 1.5rem;
+}
+
+.modal input[type="text"]:focus,
+.modal input[type="number"]:focus {
+    border: 3px solid black;
+    padding: 5px 7px;
+}
+
+.modal input[type="radio"],
+.modal input[type="checkbox"] {
+    transform: scale(1.15);
+}
+
+.modal input[type="radio"]+label,
+.modal input[type="checkbox"]+label {
+    font-weight: 400;
+    font-size: 1.6rem;
+}
+
+.radio-container {
+    display: flex;
+    justify-content: start;
+    gap: 50px;
+    margin-top: 0.8rem;
+    accent-color: var(--accent-color);
+}
+
+.checkbox-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 0.8rem;
+    accent-color: var(--accent-color);
+}
+
+.modal input[type="checkbox"]:disabled+label {
+    color: lightgrey;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-evenly;
+    margin-top: 1rem;
+}
+
+.modal form> .button-container {
+    margin-top: 3rem;
+}
+.modal button[type="submit"] {
+    background-color: var(--accent-color);
+    color: var(--text-accent-color);
 }
 
 /* Remove input[type="number"] control button */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-
-
-.hidden {
-    display: none !important;
+    -webkit-appearance: none;
+    margin: 0;
 }
