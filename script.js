@@ -15,7 +15,7 @@ class MusicLibrary {
 
     addAlbum(newAlbum) {
         if (this.albumList.every(album => newAlbum.id !== album.id)) {
-            this.albumList.push(newAlbum);
+            this.albumList.unshift(newAlbum);
         } else {
             alert('This album already exists')
         }
@@ -370,7 +370,7 @@ for (let i = 0; i <= 80; i += 2) {
         title: `title-${parseInt(Math.random() * 100)}`,
         artist: `artist-${parseInt(Math.random() * 100)}`,
         release_year: 2020 - i,
-        owned: false,
+        owned: Boolean(parseInt(Math.random() * 1.99)),
         format: ["Casette", "CD"]
     })
     library.addAlbum(testAlbum)

@@ -29,7 +29,8 @@ body {
 }
 
 .hidden {
-    display: none !important;
+    /* display: none !important; */
+    transform: scale(0);
 }
 
 .interactive {
@@ -288,6 +289,7 @@ th> div {
 
 th:nth-of-type(3)> div {
     justify-content: center;
+    margin-right: -2rem;
 }
 
 .sort-arrow {
@@ -350,7 +352,7 @@ th:nth-of-type(3)> div {
     position: fixed;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%) scale(1);
     width: 300px;
     padding: 35px 40px;
     border-radius: 10px;
@@ -364,9 +366,6 @@ th:nth-of-type(3)> div {
 }
 
 #close-modal {
-    /* position: fixed;
-    top: calc(50% - 265px);
-    left: calc(50% + 140px); */
     position: absolute;
     top: 12px;
     right: 12px;
@@ -382,10 +381,6 @@ th:nth-of-type(3)> div {
 
 .modal form> div {
     margin-top: 1.8rem;
-}
-
-.modal input {
-    /* appearance: none; */
 }
 
 .modal input[type="text"],
