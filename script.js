@@ -169,7 +169,7 @@ function addRemoveButton(row) {
     const removeButton = document.createElement('button');
 
     removeButton.classList.add('remove-album', 'img-button', 'hidden');
-
+    removeButton.setAttribute('title', 'Delete Album')
 
     dataCell.appendChild(removeButton);
     row.appendChild(dataCell);
