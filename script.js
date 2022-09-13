@@ -24,10 +24,24 @@ class MusicLibrary {
     deleteAlbum(id) {
         this.albumList = this.albumList.filter(album => album.id !== id);
     }
+
+    sort({by, ord='asc'}) {
+        //Reverse sorting algorithm is ord = 'desc';
+        let sortOrder = (ord === 'asc') ? 1 : -1;
+
+        switch (by) {
+            case 'title':
+            case 'artist':
+                // localeCompare used to compare string without math operators
+                this.albumList.sort((a, b) => a[by].localeCompare(b[by]) * sortOrder); 
+            case 'release_year':
+                this.albumList.sort((a, b) => (a[by] - b[by]) * sortOrder);
+        }
+    }
 }
 
 function filterAlbums(album) {
-    let { type: filterType, value: filterValue } = currentFilter;
+    let { type: filterType, value: filterValue } = currFilter;
 
     if (filterValue === "") return true; // No filter applied
 
@@ -103,7 +117,7 @@ function updateDisplay() {
 }
 
 function displayLibrary() {
-    albumList = library.albumList.filter(album => filterAlbums(album));
+    const albumList = library.albumList.filter(album => filterAlbums(album));
     albumList.forEach(album => { displayNewEntry(album) })
 }
 
@@ -189,6 +203,22 @@ function addRemoveButton(row) {
     removeButton.addEventListener('click', removeEntry)
 }
 
+function sortTable() {
+    const newSortBy = this.getAttribute('value');
+    console.log(this.getAttribute('value'));
+    const { by: sortBy, ord: sortOrd } = currSorting;
+
+    if (newSortBy === sortBy) {
+        currSorting.ord = (sortOrd === 'asc') ? 'desc' : 'asc';
+    } else {
+        currSorting.by = newSortBy;
+        currSorting.ord = 'asc';
+    }
+
+    library.sort(currSorting);
+    updateDisplay()
+}
+
 function openModal() {
     modal.classList.remove('hidden')
     document.getElementById('new-title').focus()
@@ -237,8 +267,8 @@ function processNewAlbumForm() {
 function applyFilter(e) {
     e.preventDefault();
 
-    currentFilter['type'] = filterSelect.value
-    currentFilter['value'] = document.getElementById('filter-value').value
+    currFilter['type'] = filterSelect.value
+    currFilter['value'] = document.getElementById('filter-value').value
 
     updateDisplay()
 }
@@ -269,10 +299,12 @@ function selectFilter() {
 
 /* Initialise library and empty filter*/
 let library = new MusicLibrary();
-let currentFilter = { type: '', value: '' };
+let currFilter = { type: '', value: '' };
+let currSorting = { by: '', ord: '' }
 
 /* UI Elements */
-const tableContents = document.querySelector('table > tbody'),
+const sortableHeaders = document.querySelectorAll('table th.sortable'),
+    tableContents = document.querySelector('table > tbody'),
     modal = document.querySelector('.modal-overlay'),
     openModalButton = document.getElementById('open-modal'),
     closeModalButton = document.getElementById('close-modal'),
@@ -287,6 +319,8 @@ const tableContents = document.querySelector('table > tbody'),
     entriesCount = document.getElementById('entries-count');
 
 /* Connect UI Elements */
+sortableHeaders.forEach(header => {
+    header.addEventListener('click', sortTable)})
 openModalButton.addEventListener('click', openModal);
 closeModalButton.addEventListener('click', closeModal);
 newAlbumForm.addEventListener('submit', submitNewAlbum);
@@ -300,15 +334,15 @@ ownsFalseButton.addEventListener('change', disableCheckBoxes);
 filterValue.setAttribute('placeholder', 'e.g. "zeppelin", "beatles, rolling"')
 
 
-// for (let i = 0; i <= 100; i += 10) {
-//     testAlbum = new Album({
-//         title: `title-${i}`,
-//         artist: `artist-${i}`,
-//         release_year: 2020 - i,
-//         owned: false,
-//         format: ["Casette", "CD"]
-//     })
-//     library.addAlbum(testAlbum)
-// }
+for (let i = 0; i <= 80; i += 2) {
+    testAlbum = new Album({
+        title: `title-${i}`,
+        artist: `artist-${i}`,
+        release_year: 2020 - i,
+        owned: false,
+        format: ["Casette", "CD"]
+    })
+    library.addAlbum(testAlbum)
+}
 
-// updateDisplay()
+updateDisplay()
