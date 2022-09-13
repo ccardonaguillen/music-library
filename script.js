@@ -133,8 +133,8 @@ function countEntries() {
         shownEntries = tableContents.childElementCount;
 
     entriesCount.textContent = totalEntries === 0 ?
-                               `Showing ${shownEntries} out of ${totalEntries} albums` :
-                               'No albums in the library. Add one by clicking the button'
+                               'No albums in the library. Add one by clicking the button' :
+                               `Showing ${shownEntries} out of ${totalEntries} albums`;
 }
 
 function displayNewEntry(album) {
@@ -205,7 +205,6 @@ function addRemoveButton(row) {
 
 function sortTable() {
     const newSortBy = this.getAttribute('value');
-    console.log(this.getAttribute('value'));
     const { by: sortBy, ord: sortOrd } = currSorting;
 
     if (newSortBy === sortBy) {
@@ -264,8 +263,8 @@ function processNewAlbumForm() {
     return formContent;
 }
 
-function applyFilter(e) {
-    e.preventDefault();
+function applyFilter(e=null) {
+    if (e) e.preventDefault();
 
     currFilter['type'] = filterSelect.value
     currFilter['value'] = document.getElementById('filter-value').value
@@ -274,7 +273,7 @@ function applyFilter(e) {
 }
 
 function selectFilter() {
-    const filter = this.value;
+    const filter = filterSelect.value;
     let placeholder = '';
 
     switch (filter) {
@@ -295,6 +294,17 @@ function selectFilter() {
     }
 
     filterValue.setAttribute('placeholder', placeholder);
+}
+
+function resetFilter() {
+    inputText = this.value;
+
+    if (inputText === "") {
+        selectFilter();
+        applyFilter();
+    }
+
+    return false;
 }
 
 /* Initialise library and empty filter*/
@@ -326,7 +336,8 @@ closeModalButton.addEventListener('click', closeModal);
 newAlbumForm.addEventListener('submit', submitNewAlbum);
 resetFormButton.addEventListener('click', disableCheckBoxes);
 filterForm.addEventListener('submit', applyFilter);
-filterSelect.addEventListener('change', selectFilter)
+filterSelect.addEventListener('change', selectFilter);
+filterValue.addEventListener('input', resetFilter);
 ownsTrueButton.addEventListener('change', enableCheckBoxes);
 ownsFalseButton.addEventListener('change', disableCheckBoxes);
 
