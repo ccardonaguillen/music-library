@@ -116,8 +116,9 @@ function countEntries() {
     const totalEntries = library.albumList.length,
         shownEntries = tableContents.childElementCount;
 
-    console.log(`Showing ${shownEntries} out of ${totalEntries} albums`);
-    entriesCount.textContent = `Showing ${shownEntries} out of ${totalEntries} albums`
+    entriesCount.textContent = totalEntries === 0 ?
+                               `Showing ${shownEntries} out of ${totalEntries} albums` :
+                               'No albums in the library. Add one by clicking the button'
 }
 
 function displayNewEntry(album) {
@@ -194,6 +195,7 @@ function openModal() {
 function closeModal() {
     modal.classList.add('hidden');
     newAlbumForm.reset();
+    disableCheckBoxes();
 }
 
 function disableCheckBoxes() {
@@ -267,6 +269,7 @@ const tableContents = document.querySelector('table > tbody'),
     openModalButton = document.getElementById('open-modal'),
     closeModalButton = document.getElementById('close-modal'),
     newAlbumForm = document.getElementById('add-album'),
+    resetFormButton = document.querySelector('button[type="reset"]'),
     ownsTrueButton = document.getElementById('owns-true'),
     ownsFalseButton = document.getElementById('owns-false'),
     formatCheckBoxes = document.getElementsByName('format'),
@@ -277,26 +280,27 @@ const tableContents = document.querySelector('table > tbody'),
 
 /* Connect UI Elements */
 openModalButton.addEventListener('click', openModal);
-closeModalButton.addEventListener('click', closeModal)
+closeModalButton.addEventListener('click', closeModal);
 newAlbumForm.addEventListener('submit', submitNewAlbum);
+resetFormButton.addEventListener('click', disableCheckBoxes);
 filterForm.addEventListener('submit', applyFilter);
 filterSelect.addEventListener('change', selectFilter)
-ownsTrueButton.addEventListener('click', enableCheckBoxes);
-ownsFalseButton.addEventListener('click', disableCheckBoxes);
+ownsTrueButton.addEventListener('change', enableCheckBoxes);
+ownsFalseButton.addEventListener('change', disableCheckBoxes);
 
 /* */
 filterValue.setAttribute('placeholder', '"zeppelin", "beatles, rolling"')
 
 
-for (let i = 0; i <= 100; i += 10) {
-    testAlbum = new Album({
-        title: `title-${i}`,
-        artist: `artist-${i}`,
-        release_year: 2020 - i,
-        owned: false,
-        format: ["Casette", "CD"]
-    })
-    library.addAlbum(testAlbum)
-}
+// for (let i = 0; i <= 100; i += 10) {
+//     testAlbum = new Album({
+//         title: `title-${i}`,
+//         artist: `artist-${i}`,
+//         release_year: 2020 - i,
+//         owned: false,
+//         format: ["Casette", "CD"]
+//     })
+//     library.addAlbum(testAlbum)
+// }
 
-updateDisplay(currentFilter)
+// updateDisplay()

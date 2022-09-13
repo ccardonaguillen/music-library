@@ -18,15 +18,15 @@
                 <img src="./images/book-music.svg" alt="Music Library Hero" id="hero-logo">
                 <h1>Music Library</h1>
             </a>
-            <a href="#" target="" title="Github Code">
-                <img src="./images/github-icon.svg" alt="Github" id="github-hero">
+            <a href="https://github.com/ccardonaguillen/music-library/" target="_blank" title="Github Code">
+                <img src="./images/github-icon.svg" alt="Github Icon" id="github-hero">
             </a>
         </div>
     </header>
     <main>
         <div class="container">
             <div class="controls-container">
-                <div id="entries-count">Showing XX out of XX albums</div>
+                <div id="entries-count">No albums in the library. Add one by clicking the button</div>
                 <div class="controls">
                     <form name="filter-by" id="filter-by">
                         <label for="filter-value">
@@ -63,11 +63,19 @@
                 </tbody>
             </table>
         </div>
+        <div class="credits">
+            <p>Design and code by
+                <a href="https://github.com/ccardonaguillen">
+                    Carlos Cardona
+                    <img src="./images/github-icon.svg" alt="Github Icon">
+                </a>
+            </p>
+        </div>
     </main>
     <div class="modal-overlay hidden">
         <div class="modal">
             <h2>New Album</h2>
-            <button id="close-modal" class="img-button"></button>
+            <button id="close-modal" class="img-button" title="Close Modal"></button>
             <form name="add-album" id="add-album">
                 <div>
                     <label for="new-title">Title</label>
