@@ -25,25 +25,29 @@
     </header>
     <main>
         <div class="container">
-            <div class="controls">
-                <form name="filter-by" action="#" method="post">
-                    <label for="filter-value">
-                        Filter by:
-                    </label>
-                    <select name="filter" id="filter">
-                        <option value="artist">Artist</option>
-                        <option value="release_year">Release year</option>
-                        <option value="owned">Owned</option>
-                        <option value="format">Format</option>
-                    </select>
-                    <input type="text" name="filter-value" id="filter-value">
-                    <button class="interactive" type="submit">Apply filter</button>
-                </form>
-                <button class="interactive" id="open-modal">
-                    New album
-                </button>
+            <div class="controls-container">
+                <div id="entries-count">Showing XX out of XX albums</div>
+                <div class="controls">
+                    <form name="filter-by" id="filter-by">
+                        <label for="filter-value">
+                            Filter by
+                        </label>
+                        <select name="filter" id="filter">
+                            <option value="artist">Artist</option>
+                            <option value="release_year">Release</option>
+                            <option value="owned">Owned</option>
+                            <option value="format">Format</option>
+                        </select>
+                        <div class="semicolon">:</div>
+                        <input type="text" name="filter-value" id="filter-value">
+                        <button class="interactive" type="submit">Apply filter</button>
+                    </form>
+                    <button class="interactive" id="open-modal">
+                        <img src="./images/plus-thick.svg">
+                        <p>New album</p>
+                    </button>
+                </div>
             </div>
-            <div id="entries-num">Showing XX out of XX albums</div>
             <table id="music-library">
                 <thead class="library-header">
                     <tr>
@@ -60,7 +64,7 @@
             </table>
         </div>
     </main>
-    <div class="modal-overlay">
+    <div class="modal-overlay hidden">
         <div class="modal">
             <h2>New Album</h2>
             <button id="close-modal" class="img-button"></button>

@@ -1,11 +1,11 @@
-function Album({title, artist, release_year, owned, format=[]}) {
+function Album({ title, artist, release_year, owned, format = [] }) {
     this.title = title;
     this.artist = artist;
     this.release_year = release_year;
     this.owned = Boolean(owned)
-    this.format = format.join(", ");
-    this.id = title.toLowerCase().replaceAll(/\W/g, "")
-            + artist.toLowerCase().replaceAll(/\W/g, "");
+    this.format = format;
+    this.id = title.toLowerCase().replaceAll(/\W/g, '')
+        + artist.toLowerCase().replaceAll(/\W/g, '');
 }
 
 class MusicLibrary {
@@ -14,8 +14,7 @@ class MusicLibrary {
     }
 
     addAlbum(newAlbum) {
-        if (this.albumList.every(album =>
-                                 newAlbum.id !== album.id)) {
+        if (this.albumList.every(album => newAlbum.id !== album.id)) {
             this.albumList.push(newAlbum);
         } else {
             alert('This album already exists')
@@ -27,9 +26,83 @@ class MusicLibrary {
     }
 }
 
+function filterAlbums(album) {
+    let { type: filterType, value: filterValue } = currentFilter;
+
+    if (filterValue === "") return true; // No filter applied
+
+    switch (filterType) {
+        case 'artist':
+            // Match any of the comma separated matches
+            const artistList = filterValue.replaceAll(' ', '').split(/[,;]/);
+            return artistList.some(artist => 
+                album['artist'].toLowerCase().includes(artist));
+        case 'release_year':
+            let match = (regex) => filterValue.match(regex);
+            const regexEq = /^\s*(\d+)\s*$/,
+                regexGt = /(?:^>\s?(\d+)$)/,
+                regexLt = /(?:^<\s?(\d+)$)/,
+                regexBtw = /(?:^(\d+)\s?[-,/;]\s?(\d+)$)/;
+
+            if (match(regexEq)) {
+                return album['release_year'] == match(regexEq)[1];
+            } else if (match(regexGt)) {
+                return album['release_year'] >= match(regexGt)[1];
+            } else if (match(regexLt)){
+                return album['release_year'] <= match(regexLt)[1];
+            } else if (match(regexBtw)) {
+                return (album['release_year'] >= match(regexBtw)[1])
+                    && (album['release_year'] <= match(regexBtw)[2]);
+            } else {
+                return false
+            }
+            
+        case 'owned':
+            // Allow the use of different words for true and false
+            switch (filterValue.toLowerCase()) {
+                case 'yes':
+                case 'true':
+                case 'owned':
+                case '1':
+                    return album['owned'];
+                case 'no':
+                case 'false':
+                case 'not owned':
+                case 'want':
+                case '0':
+                    return !album['owned'];
+                default:
+                    return true;
+            }
+        case 'format':
+            // In this filter "+" = "and" and "[,;/]" = "or"
+            let formatList = []
+            if (filterValue.includes('+')) {
+                formatList = filterValue.replaceAll(' ', '').split('+');
+                return formatList.every(format =>
+                    album['format'].findIndex(val =>
+                        val.toLowerCase() === format.toLowerCase()) != -1);
+            } else {
+                formatList = filterValue.replaceAll(' ', '').split(/[,;/]/);
+                return formatList.some(format =>
+                    album['format'].findIndex(val =>
+                        val.toLowerCase() === format.toLowerCase()) != -1);
+            }
+        default:
+            return true;
+    }
+
+}
+
+function updateDisplay() {
+    clearDisplay();
+    displayLibrary();
+    countEntries();
+}
 
 function displayLibrary() {
-    library.albumList.forEach(album => {displayNewEntry(album)})
+    albumList = library.albumList.filter(album => filterAlbums(album));
+    albumList.forEach(album => { displayNewEntry(album) })
 }
 
 function clearDisplay() {
@@ -39,9 +112,12 @@ function clearDisplay() {
     }
 }
 
-function updateDisplay() {
-    clearDisplay();
-    displayLibrary();
+function countEntries() {
+    const totalEntries = library.albumList.length,
+        shownEntries = tableContents.childElementCount;
+
+    console.log(`Showing ${shownEntries} out of ${totalEntries} albums`);
+    entriesCount.textContent = `Showing ${shownEntries} out of ${totalEntries} albums`
 }
 
 function displayNewEntry(album) {
@@ -53,13 +129,17 @@ function displayNewEntry(album) {
     tableColumns = ['title', 'artist', 'release_year', 'owned', 'format'];
     for (const prop of tableColumns) {
         const dataCell = document.createElement('td');
-        
-        if (prop === 'owned') {
-            dataCell.textContent = album[prop] ?
-                                   'Yes' :
-                                   'No';
-        } else {
-            dataCell.textContent = album[prop];
+
+        switch (prop) {
+            case 'owned':
+                dataCell.textContent = album[prop] ? 'Yes' : 'No';
+                break;
+            case 'format':
+                dataCell.textContent = album[prop].join(', ');
+                break;
+            default:
+                dataCell.textContent = album[prop];
+                break;
         }
 
         tableRow.appendChild(dataCell);
@@ -73,10 +153,10 @@ function displayNewEntry(album) {
 }
 
 function removeEntry(e) {
-    if (!confirm("Are you sure you want to delete this album?")) return;
+    if (!confirm('Are you sure you want to delete this album?')) return;
 
     const entryRow = e.target.parentElement.parentElement;
-    const id = entryRow.getAttribute("data-id");
+    const id = entryRow.getAttribute('data-id');
 
     library.deleteAlbum(id)
 
@@ -88,17 +168,17 @@ function addRemoveButton(row) {
     const removeButton = document.createElement('button');
 
     removeButton.classList.add('remove-album', 'img-button', 'hidden');
-    
+
 
     dataCell.appendChild(removeButton);
     row.appendChild(dataCell);
 
     // Connect new row so that remove-icon only appears on hover
-    row.addEventListener('mouseenter', function() {
+    row.addEventListener('mouseenter', function () {
         removeButton.classList.remove('hidden');
     })
 
-    row.addEventListener('mouseleave', function() {
+    row.addEventListener('mouseleave', function () {
         removeButton.classList.add('hidden');
     })
 
@@ -141,55 +221,82 @@ function submitNewAlbum(e) {
 function processNewAlbumForm() {
     let formData = new FormData(newAlbumForm);
 
-    formContent = Object.fromEntries(formData.entries());
+    let formContent = Object.fromEntries(formData.entries());
     formContent['owned'] = formContent['owned'] === 'true' ?
-                           true :
-                           false;
+        true :
+        false;
     formContent['format'] = formData.getAll('format');
 
     return formContent;
 }
 
+function applyFilter(e) {
+    e.preventDefault();
+
+    currentFilter['type'] = filterSelect.value
+    currentFilter['value'] = document.getElementById('filter-value').value
+
+    updateDisplay()
+}
+
+function selectFilter() {
+    const filter = this.value
+
+    switch (filter) {
+        case 'artist':
+            filterValue.setAttribute('placeholder', '"zeppelin", "beatles, rolling"')
+            break;
+        case 'release_year':
+            filterValue.setAttribute('placeholder', '"1990", "1-2000", ">1900", "<1980"')
+            break;
+        case 'owned':
+            filterValue.setAttribute('placeholder', '"true", "no", "not owned"')
+            break;
+        case 'format':
+            filterValue.setAttribute('placeholder', '"Vynil", "cd+casette", "vynil/CD"')
+    }
+}
+
+/* Initialise library and empty filter*/
 let library = new MusicLibrary();
+let currentFilter = { type: '', value: '' };
 
-const tableContents = document.querySelector('table > tbody');
-const modal = document.querySelector('.modal-overlay');
-const openModalButton = document.getElementById('open-modal');
-const closeModalButton = document.getElementById('close-modal');
-const newAlbumForm = document.getElementById('add-album');
-const ownsTrueButton = document.getElementById('owns-true');
-const ownsFalseButton = document.getElementById('owns-false');
-const formatCheckBoxes = document.getElementsByName('format');
+/* UI Elements */
+const tableContents = document.querySelector('table > tbody'),
+    modal = document.querySelector('.modal-overlay'),
+    openModalButton = document.getElementById('open-modal'),
+    closeModalButton = document.getElementById('close-modal'),
+    newAlbumForm = document.getElementById('add-album'),
+    ownsTrueButton = document.getElementById('owns-true'),
+    ownsFalseButton = document.getElementById('owns-false'),
+    formatCheckBoxes = document.getElementsByName('format'),
+    filterForm = document.getElementById('filter-by'),
+    filterSelect = document.getElementById('filter'),
+    filterValue = document.getElementById('filter-value'),
+    entriesCount = document.getElementById('entries-count');
 
-
+/* Connect UI Elements */
 openModalButton.addEventListener('click', openModal);
 closeModalButton.addEventListener('click', closeModal)
 newAlbumForm.addEventListener('submit', submitNewAlbum);
+filterForm.addEventListener('submit', applyFilter);
+filterSelect.addEventListener('change', selectFilter)
 ownsTrueButton.addEventListener('click', enableCheckBoxes);
 ownsFalseButton.addEventListener('click', disableCheckBoxes);
 
-album1 = new Album({title: "Lonerism",
-                    artist: "Tame Impala",
-                    release_year: 2012,
-                    owned: false
-                })
-
-album2 = new Album({title: "Favourite Worst Nightmare",
-                    artist: "Arctic Monkeys",
-                    release_year: 2007,
-                    owned: true,
-                    format: ['CD']
-                })
-                    
-album3 = new Album({title: "Revolver",
-                    artist: "The Beatles",
-                    release_year: 1966,
-                    owned: true,
-                    format: ["Vynil", "CD"]})
-               
-library.addAlbum(album1);
-library.addAlbum(album2);
-library.addAlbum(album3);
+/* */
+filterValue.setAttribute('placeholder', '"zeppelin", "beatles, rolling"')
 
 
-updateDisplay()
+for (let i = 0; i <= 100; i += 10) {
+    testAlbum = new Album({
+        title: `title-${i}`,
+        artist: `artist-${i}`,
+        release_year: 2020 - i,
+        owned: false,
+        format: ["Casette", "CD"]
+    })
+    library.addAlbum(testAlbum)
+}
+
+updateDisplay(currentFilter)
