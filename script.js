@@ -32,6 +32,8 @@ function filterAlbums(album) {
     if (filterValue === "") return true; // No filter applied
 
     switch (filterType) {
+        case 'title':
+            return album['title'].toLowerCase().includes(filterValue);
         case 'artist':
             // Match any of the comma separated matches
             const artistList = filterValue.replaceAll(' ', '').split(/[,;]/);
@@ -242,21 +244,27 @@ function applyFilter(e) {
 }
 
 function selectFilter() {
-    const filter = this.value
+    const filter = this.value;
+    let placeholder = '';
 
     switch (filter) {
+        case 'title':
+            placeholder = 'e.g. "submarine"';
+            break;
         case 'artist':
-            filterValue.setAttribute('placeholder', '"zeppelin", "beatles, rolling"')
+            placeholder = 'e.g. "zeppelin", "beatles, rolling"';
             break;
         case 'release_year':
-            filterValue.setAttribute('placeholder', '"1990", "1-2000", ">1900", "<1980"')
+            placeholder = 'e.g. "1990", "1-2000", ">1900", "<1980"';
             break;
         case 'owned':
-            filterValue.setAttribute('placeholder', '"true", "no", "not owned"')
+            placeholder = 'e.g. "true", "no", "not owned"';
             break;
         case 'format':
-            filterValue.setAttribute('placeholder', '"Vynil", "cd+casette", "vynil/CD"')
+            placeholder = 'e.g. "Vynil", "cd+casette", "vynil/CD"';
     }
+
+    filterValue.setAttribute('placeholder', placeholder);
 }
 
 /* Initialise library and empty filter*/
@@ -289,7 +297,7 @@ ownsTrueButton.addEventListener('change', enableCheckBoxes);
 ownsFalseButton.addEventListener('change', disableCheckBoxes);
 
 /* */
-filterValue.setAttribute('placeholder', '"zeppelin", "beatles, rolling"')
+filterValue.setAttribute('placeholder', 'e.g. "zeppelin", "beatles, rolling"')
 
 
 // for (let i = 0; i <= 100; i += 10) {
