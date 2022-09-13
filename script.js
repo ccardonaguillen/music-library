@@ -215,8 +215,28 @@ function sortTable() {
     }
 
     library.sort(currSorting);
-    updateDisplay()
+    updateDisplay();
+    removeSortingArrows();
+    displaySortingArrow(this);
 }
+
+function displaySortingArrow(column) {
+    const sortArrow = column.firstElementChild.lastElementChild;
+
+    sortArrow.classList.add(currSorting.ord);
+    sortArrow.classList.remove('hidden');
+}
+
+function removeSortingArrows() {
+    sortableHeaders.forEach(header => {
+        const sortArrow = header.firstElementChild.lastElementChild;
+
+        sortArrow.classList.add('hidden');
+        sortArrow.classList.remove('asc');
+        sortArrow.classList.remove('desc');
+    })
+}
+
 
 function openModal() {
     modal.classList.remove('hidden')
@@ -310,7 +330,7 @@ function resetFilter() {
 /* Initialise library and empty filter*/
 let library = new MusicLibrary();
 let currFilter = { type: '', value: '' };
-let currSorting = { by: '', ord: '' }
+let currSorting = { by: 'title', ord: 'asc' };
 
 /* UI Elements */
 const sortableHeaders = document.querySelectorAll('table th.sortable'),
@@ -347,8 +367,8 @@ filterValue.setAttribute('placeholder', 'e.g. "zeppelin", "beatles, rolling"')
 
 for (let i = 0; i <= 80; i += 2) {
     testAlbum = new Album({
-        title: `title-${i}`,
-        artist: `artist-${i}`,
+        title: `title-${parseInt(Math.random() * 100)}`,
+        artist: `artist-${parseInt(Math.random() * 100)}`,
         release_year: 2020 - i,
         owned: false,
         format: ["Casette", "CD"]

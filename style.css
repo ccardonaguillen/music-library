@@ -216,8 +216,13 @@ main table {
 
 th,
 td {
-    padding: 1.2rem 0rem 1.2rem 4.8rem;
+    padding: 1.2rem 0rem 1.2rem 1rem;
     cursor: default;
+}
+
+th:nth-of-type(1),
+td:nth-of-type(1) {
+    padding-left: calc(5vw + 40px);
 }
 
 tr:nth-of-type(even) {
@@ -230,6 +235,7 @@ td:nth-of-type(6) {
     margin: 0;
     padding: 0;
     padding-right: 1rem;
+    text-align: left;
 }
 
 th:nth-of-type(3),
@@ -269,6 +275,34 @@ tbody>tr:hover {
 
 .remove-album:hover {
     background-image: url(./images/delete-empty.svg);
+}
+
+th p {
+    margin: 0;
+    padding: 0;
+}
+
+th> div {
+    display: flex;
+}
+
+th:nth-of-type(3)> div {
+    justify-content: center;
+}
+
+.sort-arrow {
+    background-color: #000000;
+    height: 2rem;
+    width: 2rem;
+    margin-left: 0.25rem;
+}
+
+.sort-arrow.desc {
+    clip-path: polygon(50% 70%, 20% 40%, 80% 40%);;
+}
+
+.sort-arrow.asc {
+    clip-path: polygon(50% 35%, 20% 65%, 80% 65%);;
 }
 
 /* CREDITS */
