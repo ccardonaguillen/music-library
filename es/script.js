@@ -76,15 +76,11 @@ function filterAlbums(album) {
         case 'owned':
             // Allow the use of different words for true and false
             switch (filterValue.toLowerCase()) {
-                case 'yes':
-                case 'true':
-                case 'owned':
+                case 'sí':
+                case 'si':
                 case '1':
                     return album['owned'];
                 case 'no':
-                case 'false':
-                case 'not owned':
-                case 'want':
                 case '0':
                     return !album['owned'];
                 default:
@@ -133,8 +129,8 @@ function countEntries() {
         shownEntries = tableContents.childElementCount;
 
     entriesCount.textContent = totalEntries === 0 ?
-                               'No albums in the library. Add one by clicking the button' :
-                               `Showing ${shownEntries} out of ${totalEntries} albums`;
+                               'No hay ningún álbum en la colección. Añade uno usando el botón' :
+                               `Mostrando ${shownEntries} de ${totalEntries} álbumes`;
 }
 
 function displayNewEntry(album) {
@@ -149,7 +145,7 @@ function displayNewEntry(album) {
 
         switch (prop) {
             case 'owned':
-                dataCell.textContent = album[prop] ? 'Yes' : 'No';
+                dataCell.textContent = album[prop] ? 'Sí' : 'No';
                 break;
             case 'format':
                 dataCell.textContent = album[prop].join(', ');
@@ -298,19 +294,19 @@ function selectFilter() {
 
     switch (filter) {
         case 'title':
-            placeholder = 'e.g. "submarine"';
+            placeholder = 'p. ej. "submarine"';
             break;
         case 'artist':
-            placeholder = 'e.g. "zeppelin", "beatles, rolling"';
+            placeholder = 'p. ej. "zeppelin", "beatles, rolling"';
             break;
         case 'release_year':
-            placeholder = 'e.g. "1990", "1-2000", ">1900", "<1980"';
+            placeholder = 'p. ej. "1990", "1-2000", ">1900", "<1980"';
             break;
         case 'owned':
-            placeholder = 'e.g. "true", "no", "not owned"';
+            placeholder = 'p. ej. "sí", "no"';
             break;
         case 'format':
-            placeholder = 'e.g. "Vynil", "cd+casette", "vynil/CD"';
+            placeholder = 'p. ej. "Vinilo", "cd+casete", "vinilo/CD"';
     }
 
     filterValue.setAttribute('placeholder', placeholder);
@@ -365,16 +361,14 @@ ownsTrueButton.addEventListener('change', enableCheckBoxes);
 ownsFalseButton.addEventListener('change', disableCheckBoxes);
 
 /* */
-filterValue.setAttribute('placeholder', 'e.g. "zeppelin", "beatles, rolling"')
-
 
 for (let i = 0; i <= 80; i += 2) {
     testAlbum = new Album({
-        title: `title-${parseInt(Math.random() * 100)}`,
-        artist: `artist-${parseInt(Math.random() * 100)}`,
+        title: `album-${parseInt(Math.random() * 100)}`,
+        artist: `artista-${parseInt(Math.random() * 100)}`,
         release_year: 2020 - i,
         owned: Boolean(parseInt(Math.random() * 1.99)),
-        format: ["Casette", "CD"]
+        format: ["Casete", "CD"]
     })
     library.addAlbum(testAlbum)
 }
@@ -385,7 +379,7 @@ updateDisplay()
 
 artistInput.addEventListener('input', suggestArtists);
 artistInput.addEventListener('focus', suggestArtists);
-artistInput.addEventListener('blur', closeSuggestions);
+artistInput.addEventListener('blur', closeSuggestions, false);
 
 
 function suggestArtists(e) {
