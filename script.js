@@ -339,6 +339,9 @@ const sortableHeaders = document.querySelectorAll('table th.sortable'),
     openModalButton = document.getElementById('open-modal'),
     closeModalButton = document.getElementById('close-modal'),
     newAlbumForm = document.getElementById('add-album'),
+    artistInput = document.getElementById('new-artist'),
+    artistSuggestions = document.querySelector('.suggestions'),
+    artistSuggestionsList = artistSuggestions.firstElementChild,
     resetFormButton = document.querySelector('button[type="reset"]'),
     ownsTrueButton = document.getElementById('owns-true'),
     ownsFalseButton = document.getElementById('owns-false'),
@@ -377,3 +380,65 @@ for (let i = 0; i <= 80; i += 2) {
 }
 
 updateDisplay()
+
+
+
+artistInput.addEventListener('input', suggestArtists);
+artistInput.addEventListener('focus', suggestArtists);
+artistInput.addEventListener('blur', closeSuggestions);
+
+
+function suggestArtists(e) {
+    const fullArtistList = library.albumList.map(album => album.artist);
+    const input = this.value;
+
+    if (input === '') {
+        this.setAttribute('placeholder', this.placeholder)
+        closeSuggestions();
+
+        return
+    };
+
+    let suggestedArtists = fullArtistList.filter(artist => artist.includes(input));
+
+    clearSuggestions();
+    displaySuggestions(suggestedArtists, input);
+}
+
+function clearSuggestions() {
+    while (artistSuggestionsList.lastElementChild) {
+        artistSuggestionsList.lastElementChild.remove();
+    }
+}
+
+function displaySuggestions(suggestedArtists, input) {
+    if (!suggestedArtists.length) {
+        closeSuggestions();
+        return;
+    }
+
+    artistSuggestions.classList.remove('hidden');
+
+    const regex = new RegExp(`(.*)(${input})(.*)`, 'i');
+
+    suggestedArtists.forEach(artist => {
+        const li = document.createElement('li');
+        
+        match = artist.match(regex);
+        li.innerHTML = `${match[1]}<strong>${match[2]}</strong>${match[3]}`
+        artistSuggestionsList.appendChild(li);
+        
+        li.addEventListener('click', chooseSuggestion);
+    })
+}
+
+function chooseSuggestion() {
+    artistInput.value = this.textContent;
+
+    artistSuggestions.classList.add('hidden')
+}
+
+function closeSuggestions() {
+    clearSuggestions();
+    artistSuggestions.classList.add('hidden');
+}
