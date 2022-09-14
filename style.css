@@ -35,7 +35,7 @@ body {
     transform: scale(0);
 }
 
-button {
+button.interactive {
     box-sizing: border-box;
     width: 120px;
     font-size: inherit;
@@ -43,7 +43,7 @@ button {
     border-radius: 5px;
 }
 
-button:active {
+button.interactive:active {
     box-shadow: 1px 2px 3px var(--shadow-dark) inset;
     transform: translate(1%, 2%);
 }
