@@ -385,7 +385,8 @@ updateDisplay()
 
 artistInput.addEventListener('input', suggestArtists);
 artistInput.addEventListener('focus', suggestArtists);
-artistInput.addEventListener('blur', closeSuggestions, false);
+
+document.addEventListener('click', closeSuggestions, true);
 
 
 function suggestArtists(e) {
@@ -438,7 +439,10 @@ function chooseSuggestion() {
     artistSuggestions.classList.add('hidden')
 }
 
-function closeSuggestions() {
+function closeSuggestions(e=null) {
+    if (e) {
+        if (e.target === artistInput) return;
+    };
     clearSuggestions();
     artistSuggestions.classList.add('hidden');
 }
