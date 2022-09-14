@@ -17,7 +17,7 @@ class MusicLibrary {
         if (this.albumList.every(album => newAlbum.id !== album.id)) {
             this.albumList.unshift(newAlbum);
         } else {
-            alert('This album already exists')
+            alert('This album already exists.')
         }
     }
 

@@ -17,7 +17,7 @@ class MusicLibrary {
         if (this.albumList.every(album => newAlbum.id !== album.id)) {
             this.albumList.unshift(newAlbum);
         } else {
-            alert('This album already exists')
+            alert('Este álbum ya está en la colección.')
         }
     }
 
@@ -166,7 +166,7 @@ function displayNewEntry(album) {
 }
 
 function removeEntry(e) {
-    if (!confirm('Are you sure you want to delete this album?')) return;
+    if (!confirm('¿Estás seguro de que deseas eliminar este álbum?')) return;
 
     const entryRow = e.target.parentElement.parentElement;
     const id = entryRow.getAttribute('data-id');
