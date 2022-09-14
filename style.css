@@ -3,6 +3,8 @@
     --main-color: #EAEAEA;
     --secondary-color: #B9C1DF;
     --accent-color: #2f4f4f;
+    --button-hover-main-color: #d6d6d6;
+    --button-hover-accent-color: #1f3535;
     /* #75061F */
     --text-main-color: #000000;
     --text-secondary-color: rgb(65, 65, 65);
@@ -33,17 +35,36 @@ body {
     transform: scale(0);
 }
 
-.interactive {
+button {
+    box-sizing: content-box;
     width: 120px;
     font-size: inherit;
     font-family: var(--default-font-family);
     border-radius: 5px;
-    border: 2px solid var(--accent-color);
 }
 
-.interactive:active {
+button:active {
     box-shadow: 1px 2px 3px var(--shadow-dark) inset;
     transform: translate(1%, 2%);
+}
+
+button.light {
+    border: 3px solid var(--accent-color);
+    background-color: var(--main-color);
+}
+
+button.light:hover {
+    background-color: var(--button-hover-main-color);
+}
+
+button.dark {
+    color: var(--main-color);
+    border: none;
+    background-color: var(--accent-color);
+}
+
+button.dark:hover {
+    background-color: var(--button-hover-accent-color);
 }
 
 .img-button {
@@ -186,8 +207,6 @@ main .container {
 }
 
 #open-modal {
-    background-color: var(--accent-color);
-    color: var(--text-accent-color);
     font-weight: 700;
     height: 50px;
 }
@@ -293,18 +312,31 @@ th:nth-of-type(3)> div {
 }
 
 .sort-arrow {
-    background-color: #000000;
+    /* background-color: #000000; */
     height: 2rem;
     width: 2rem;
-    margin-left: 0.25rem;
+    margin-left: 0.5rem;
+    background-repeat: no-repeat;
 }
 
-.sort-arrow.desc {
-    clip-path: polygon(50% 70%, 20% 40%, 80% 40%);;
+.sort-arrow.desc.alph {
+    background-image: url(./images/sort-alphabetical-descending.svg);
+    /* clip-path: polygon(50% 70%, 20% 40%, 80% 40%);; */
 }
 
-.sort-arrow.asc {
-    clip-path: polygon(50% 35%, 20% 65%, 80% 65%);;
+.sort-arrow.asc.alph {
+    background-image: url(./images/sort-alphabetical-ascending.svg);
+    /* clip-path: polygon(50% 35%, 20% 65%, 80% 65%);; */
+}
+
+.sort-arrow.desc.num {
+    background-image: url(./images/sort-numeric-descending.svg);
+    /* clip-path: polygon(50% 70%, 20% 40%, 80% 40%);; */
+}
+
+.sort-arrow.asc.num {
+    background-image: url(./images/sort-numeric-ascending.svg);
+    /* clip-path: polygon(50% 35%, 20% 65%, 80% 65%);; */
 }
 
 /* CREDITS */
@@ -371,6 +403,7 @@ th:nth-of-type(3)> div {
     right: 12px;
     width: 30px;
     height: 30px;
+    padding: 0;
     background-image: url(./images/close.svg);
 }
 
@@ -445,13 +478,8 @@ th:nth-of-type(3)> div {
 }
 
 .modal button {
-    padding: 0.7rem 1.2rem;
+    padding: 0.7rem 0rem;
     font-weight: 600;
-}
-
-.modal button[type="submit"] {
-    background-color: var(--accent-color);
-    color: var(--text-accent-color);
 }
 
 /* Remove input[type="number"] control button */
