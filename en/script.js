@@ -1,5 +1,4 @@
-/* INITIALISE LIBRARY, FILTER AND SORTING OBJECTS*/
-let library = new MusicLibrary();
+/* INITIALISE FILTER AND SORTING OBJECTS*/
 let currFilter = { type: "", value: "" };
 let currSorting = { by: "title", ord: "asc" };
 
@@ -72,6 +71,9 @@ class MusicLibrary {
         }
     }
 }
+
+// INITIALISE LIBRARY
+let library = new MusicLibrary();
 
 /* TABLE CONTENTS */
 
