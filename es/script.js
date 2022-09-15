@@ -115,7 +115,17 @@ function displayAlbum(album) {
 
         switch (prop) {
             case "owned":
-                dataCell.textContent = album[prop] ? "Sí" : "No";
+                const ownedIcon = document.createElement('img')
+                ownedIcon.classList.add('owned-icon');
+
+                let iconPath =
+                    album[prop]
+                        ? "check-circle-outline.svg"
+                        : "close-circle-outline.svg"
+                ownedIcon.setAttribute("src", "../images/" + iconPath);
+
+                dataCell.appendChild(ownedIcon)
+                // dataCell.textContent = album[prop] ? "Sí" : "No";
                 break;
             case "format":
                 dataCell.textContent = album[prop].join(", ");
@@ -519,15 +529,15 @@ artistInput.addEventListener("focus", suggestArtists);
 // Close suggestions div when clicking outside suggestion box
 document.addEventListener("click", closeSuggestions, true);
 
-for (let i = 0; i <= 80; i += 2) {
-    testAlbum = new Album({
-        title: `titulo-${parseInt(Math.random() * 100)}`,
-        artist: `artista-${parseInt(Math.random() * 100)}`,
-        release_year: 2020 - i,
-        owned: Boolean(parseInt(Math.random() * 1.99)),
-        format: ["Casette", "CD"],
-    });
-    library.addAlbum(testAlbum);
-}
+// for (let i = 0; i <= 80; i += 2) {
+//     testAlbum = new Album({
+//         title: `titulo-${parseInt(Math.random() * 100)}`,
+//         artist: `artista-${parseInt(Math.random() * 100)}`,
+//         release_year: 2020 - i,
+//         owned: Boolean(parseInt(Math.random() * 1.99)),
+//         format: ["Casette", "CD"],
+//     });
+//     library.addAlbum(testAlbum);
+// }
 
-updateDisplay();
+// updateDisplay();
