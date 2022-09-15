@@ -120,8 +120,8 @@ function displayAlbum(album) {
 
                 let iconPath =
                     album[prop]
-                        ? "check-circle-outline.svg"
-                        : "close-circle-outline.svg"
+                        ? "check.svg"
+                        : "close-red.svg"
                 ownedIcon.setAttribute("src", "../images/" + iconPath);
 
                 dataCell.appendChild(ownedIcon)
