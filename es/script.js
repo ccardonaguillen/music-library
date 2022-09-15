@@ -109,7 +109,7 @@ function displayAlbum(album) {
     tableRow.setAttribute("data-id", album.id);
 
     // Add album info
-    tableColumns = ["title", "artist", "release_year", "owned", "format"];
+    const tableColumns = ["title", "artist", "release_year", "owned", "format"];
     for (const prop of tableColumns) {
         const dataCell = document.createElement("td");
 
@@ -120,8 +120,8 @@ function displayAlbum(album) {
 
                 let iconPath =
                     album[prop]
-                        ? "check-circle-outline.svg"
-                        : "close-circle-outline.svg"
+                        ? "check.svg"
+                        : "close-red.svg"
                 ownedIcon.setAttribute("src", "../images/" + iconPath);
 
                 dataCell.appendChild(ownedIcon)
@@ -413,7 +413,7 @@ function selectFilter() {
 
 function resetFilter() {
     /* Reset filter when the input box is empty and apply empty filter */
-    inputText = this.value;
+    const inputText = this.value;
 
     if (inputText === "") {
         selectFilter();
