@@ -402,10 +402,10 @@ function selectFilter() {
             placeholder = 'p. ej. "1990", "1-2000", ">1900", "<1980"';
             break;
         case "owned":
-            placeholder = 'p. ej. "true", "no", "not owned"';
+            placeholder = 'p. ej. "sí", "no"';
             break;
         case "format":
-            placeholder = 'p. ej. "Vynil", "cd+casette", "vynil/CD"';
+            placeholder = 'p. ej. "Vinilo", "cd+casete", "vinilo/CD"';
     }
 
     filterValue.setAttribute("placeholder", placeholder);
