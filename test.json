@@ -1,0 +1,15 @@
+{
+    "one": {
+        "title": "Bliss",
+        "artist": "Muse",
+        "release_year": "2008",
+        "owned": true
+    },
+    "two": {
+        "title": "Lonerism",
+        "artist": "Tame Impala",
+        "release_year": "2008",
+        "owned": false,
+        "format": ["CD", "Vinilo"]
+    }
+}
