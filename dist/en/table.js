@@ -1,24 +1,19 @@
 // import { musicLibrary as library } from "./library.js"
-
-let currFilter = { type: "", value: "" };
-
 var tableView = (function () {
     const contents = document.querySelector("table > tbody");
 
     events.on("albumAdded", _renderAlbum);
     events.on("librarySorted", _update);
+    events.on("filterApplied", _update);
 
     function _update() {
         _clear();
         _render();
-
     }
 
     function _render() {
         // Apply current filter to album list
-        const albumList = musicLibrary.getAlbumList()//.filter((album) => filterAlbums(album));
-        // Display each entry of the album
-        albumList.forEach((album) => {
+        musicLibrary.getAlbumList().forEach((album) => {
             _renderAlbum(album);
         });
     }
@@ -31,6 +26,8 @@ var tableView = (function () {
     }
 
     function _renderAlbum(album) {
+        // Apply filter. If false do not render
+        if (!tableController.filterAlbum(album)) return;
         // Create a new row for the album
         const row = document.createElement("tr");
     
@@ -169,5 +166,91 @@ var tableController = (function () {
 
         _hideSortingArrows();
         _renderSortingArrow(header);
+    }
+
+    function filterAlbum(album) {
+        var currFilter = filterController.getCurrentFilter();
+        var { type: filterType, value: filterValue } = currFilter;
+    
+        // Reset display if no filter apply (input empty) do nothing
+        if (filterValue === "") return true;
+    
+        switch (filterType) {
+            case "title":
+                return album["title"].toLowerCase().includes(filterValue);
+            case "artist":
+                // Match any of the comma separated matches
+                const artistList = filterValue.replaceAll(" ", "").split(/[,;]/);
+                return artistList.some((artist) =>
+                    album["artist"].toLowerCase().includes(artist)
+                );
+            case "release_year":
+                let match = (regex) => filterValue.match(regex);
+                // Regex for year for different release year filter
+                const regexEq = /^\s*(\d+)\s*$/, // Single year value
+                    regexGt = /(?:^>\s?(\d+)$)/, // Greater than
+                    regexLt = /(?:^<\s?(\d+)$)/, // Lower than
+                    regexBtw = /(?:^(\d+)\s?[-,/;]\s?(\d+)$)/; //Two values interval
+    
+                if (match(regexEq)) {
+                    return album["release_year"] == match(regexEq)[1];
+                } else if (match(regexGt)) {
+                    return album["release_year"] >= match(regexGt)[1];
+                } else if (match(regexLt)) {
+                    return album["release_year"] <= match(regexLt)[1];
+                } else if (match(regexBtw)) {
+                    return (
+                        album["release_year"] >= match(regexBtw)[1] &&
+                        album["release_year"] <= match(regexBtw)[2]
+                    );
+                } else {
+                    return false;
+                }
+    
+            case "owned":
+                // Allow the use of different words for true and false
+                switch (filterValue.toLowerCase()) {
+                    case "yes":
+                    case "true":
+                    case "owned":
+                    case "1":
+                        return album["owned"];
+                    case "no":
+                    case "false":
+                    case "not owned":
+                    case "want":
+                    case "0":
+                        return !album["owned"];
+                    default:
+                        return true;
+                }
+            case "format":
+                // In this filter "+" = "and" and "[,;/]" = "or"
+                let formatList = [];
+                if (filterValue.includes("+")) {
+                    formatList = filterValue.replaceAll(" ", "").split("+");
+                    return formatList.every(
+                        (format) =>
+                            album["format"].findIndex(
+                                (val) => val.toLowerCase() === format.toLowerCase()
+                            ) != -1
+                    );
+                } else {
+                    formatList = filterValue.replaceAll(" ", "").split(/[,;/]/);
+                    return formatList.some(
+                        (format) =>
+                            album["format"].findIndex(
+                                (val) => val.toLowerCase() === format.toLowerCase()
+                            ) != -1
+                    );
+                }
+            default:
+                // Else do nothing
+                return true;
+        }
+    }
+
+    return {
+        filterAlbum
     }
 })();

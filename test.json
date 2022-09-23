@@ -5,5 +5,12 @@
         "release_year": 2008,
         "owned": true,
         "format": ["CD"]
+    },
+    "two": {
+        "title": "Lonerism",
+        "artist": "Tame Impala",
+        "release_year": 2010,
+        "owned": false,
+        "format": []
     }
 }
