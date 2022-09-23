@@ -31,8 +31,8 @@ body {
 }
 
 .hidden {
-    /* display: none !important; */
-    transform: scale(0);
+    display: none !important;
+    /* transform: scale(0); */
 }
 
 button.interactive {
