@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Colección Música | The Odin Project</title>
+    <title>Music Library | The Odin Project</title>
     <link rel="stylesheet" href="../style.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200..900" rel="stylesheet">
-    <script src="./script.js" defer></script>
+    <script src="./bundle.js" defer></script>
 
 </head>
 
@@ -16,40 +16,39 @@
     <header>
         <div class="container">
             <a href="https://ccardonaguillen.github.io/music-library/" target="">
-                <img src="../images/book-music.svg" alt="Colección Música" id="hero-logo">
-                <h1>Colección de Música</h1>
+                <img src="../images/book-music.svg" alt="Music Library Hero" id="hero-logo">
+                <h1>Music Library</h1>
             </a>
-            <a href="https://github.com/ccardonaguillen/music-library/" target="_blank" title="Código Github">
-                <img src="../images/github-icon.svg" alt="Logo Github" id="github-hero">
+            <a href="https://github.com/ccardonaguillen/music-library/" target="_blank" title="Github Code">
+                <img src="../images/github-icon.svg" alt="Github Icon" id="github-hero">
             </a>
         </div>
     </header>
     <main>
         <div class="container">
             <div class="controls-container">
-                <div id="entries-count">
-                    No hay ningún álbum en la colección. Añade uno usando el botón
-                </div>
+                <div id="entries-count">No albums in the library. Add one by clicking the button</div>
                 <div class="controls">
                     <form name="filter-by" id="filter-by">
                         <label for="filter-value">
-                            Filtrar por
+                            Filter by
                         </label>
                         <select name="filter" id="filter">
-                            <option value="title">Título</option>
-                            <option value="artist" selected="selected">Artista</option>
-                            <option value="release_year">Publicación</option>
-                            <option value="owned">Copia</option>
-                            <option value="format">Formato</option>
+                            <option value="title">Title</option>
+                            <option value="artist" selected="selected">Artist</option>
+                            <option value="release_year">Release</option>
+                            <option value="owned">Owned</option>
+                            <option value="format">Format</option>
                         </select>
                         <div class="semicolon">:</div>
                         <input type="text" name="filter-value" id="filter-value"
-                            placeholder='p. ej. "zeppelin", "beatles, rolling"'>
-                        <button class="interactive light" type="submit">Aplicar filtro</button>
+                            placeholder='e.g. "zeppelin", "beatles, rolling"'
+                            autocomplete="off">
+                        <button class="interactive light" type="submit">Apply filter</button>
                     </form>
                     <button class="interactive dark" id="open-modal">
                         <img src="../images/plus-thick.svg">
-                        <p>Nuevo álbum</p>
+                        <p>New album</p>
                     </button>
                 </div>
             </div>
@@ -59,24 +58,24 @@
                     <tr>
                         <th class="sortable" value="title">
                             <div>
-                                <p>Título</p>
+                                <p>Title</p>
                                 <div class="sort-arrow alph asc"></div>
                             </div>
                         </th>
                         <th class="sortable" value="artist">
                             <div>
-                                <p>Artista</p>
+                                <p>Artist</p>
                                 <div class="sort-arrow alph hidden"></div>
                             </div>
                         </th>
                         <th class="sortable" value="release_year">
                             <div>
-                                <p>Publicación</p>
+                                <p>Released</p>
                                 <div class="sort-arrow num hidden"></div>
                             </div>
                         </th>
-                        <th>Copia</th>
-                        <th>Formato</th>
+                        <th>Owned</th>
+                        <th>Format</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -85,40 +84,40 @@
             </table>
         </div>
         <div class="credits">
-            <p>Diseño y código por
+            <p>Design and code by
                 <a href="https://github.com/ccardonaguillen">
                     Carlos Cardona
-                    <img src="../images/github-icon.svg" alt="Logo Github">
+                    <img src="../images/github-icon.svg" alt="Github Icon">
                 </a>
             </p>
         </div>
     </main>
     <div class="modal-overlay hidden">
         <div class="modal">
-            <h2>Nuevo Álbum</h2>
-            <button id="close-modal" class="img-button" title="Cerrar Panel"></button>
+            <h2>New Album</h2>
+            <button id="close-modal" class="img-button" title="Close Modal"></button>
             <form name="add-album" id="add-album" autocomplete="off">
                 <div>
-                    <label for="new-title">Título</label>
-                    <input type="text" name="title" id="new-title" placeholder="p. ej. Revolver" required>
+                    <label for="new-title">Title</label>
+                    <input type="text" name="title" id="new-title" placeholder="e.g. Revolver" required>
                 </div>
                 <div>
-                    <label for="new-artist">Artista</label>
-                    <input type="text" name="artist" id="new-artist" placeholder="p. ej. The Beatles" required>
+                    <label for="new-artist">Artist</label>
+                    <input type="text" name="artist" id="new-artist" placeholder="e.g. The Beatles" required>
                     <div class="suggestions hidden">
                         <ul></ul>
                     </div>
                 </div>
                 <div>
-                    <label for="new-release-year">Año de publicación</label>
-                    <input type="number" name="release_year" id="new-release-year" placeholder="p. ej. 1966">
+                    <label for="new-release-year">Release year</label>
+                    <input type="number" name="release_year" id="new-release-year" placeholder="e.g. 1966">
                 </div>
                 <div>
-                    <label for="owned">¿Tienes una copia física?</label>
+                    <label for="owned">Do you own a copy?</label>
                     <div class="radio-container">
                         <div>
                             <input type="radio" name="owned" id="owns-true" value=true>
-                            <label for="owns-true">Sí</label>
+                            <label for="owns-true">Yes</label>
                         </div>
                         <div>
                             <input type="radio" name="owned" id="owns-false" value=false checked>
@@ -127,30 +126,30 @@
                     </div>
                 </div>
                 <div>
-                    <label for="format">¿En qué formato?</label>
+                    <label for="format">In which format?</label>
                     <div class="checkbox-container">
                         <div>
                             <input type="checkbox" name="format" id="cd" value="CD" disabled>
                             <label for="cd">CD</label>
                         </div>
                         <div>
-                            <input type="checkbox" name="format" id="vynil" value="Vynil" disabled>
-                            <label for="vynil">Vinilo</label>
+                            <input type="checkbox" name="format" id="vinyl" value="Vinyl" disabled>
+                            <label for="vinyl">Vinyl</label>
                         </div>
                         <div>
                             <input type="checkbox" name="format" id="casette" value="Casette" disabled>
-                            <label for="casette">Casete</label>
+                            <label for="casette">Casette</label>
                         </div>
                         <div>
                             <input type="checkbox" name="format" id="other" value="Other" disabled>
-                            <label for="other">Otro</label>
+                            <label for="other">Other</label>
                         </div>
                     </div>
                 </div>
                 <div class="button-container">
-                    <button class="interactive dark" type="submit">Añadir</button>
-                    <button class="interactive light" type="reset">Reestabl.</button>
-                </div>  
+                    <button class="interactive dark" type="submit">Submit</button>
+                    <button class="interactive light" type="reset">Clear form</button>
+                </div>
             </form>
         </div>
     </div>

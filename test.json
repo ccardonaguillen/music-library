@@ -2,14 +2,15 @@
     "one": {
         "title": "Bliss",
         "artist": "Muse",
-        "release_year": "2008",
-        "owned": true
+        "release_year": 2008,
+        "owned": true,
+        "format": ["CD"]
     },
     "two": {
         "title": "Lonerism",
         "artist": "Tame Impala",
-        "release_year": "2008",
+        "release_year": 2010,
         "owned": false,
-        "format": ["CD", "Vinilo"]
+        "format": []
     }
 }
