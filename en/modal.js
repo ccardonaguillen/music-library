@@ -110,7 +110,8 @@ var artistSuggestions = (function () {
         var suggestions = musicLibrary.getAlbumList().reduce((sugg, album) => {
                 const artist = album.artist;
                 if (artist.toLowerCase().includes(inputValue.toLowerCase())) {
-                    sugg.push(artist);
+                    // Avoid duplicates
+                    if (sugg.indexOf(artist) === -1 ) sugg.push(artist);
                 } 
                 return sugg
             }, []);
@@ -118,10 +119,12 @@ var artistSuggestions = (function () {
             _close();
             return;
         }    
+        // Refresh div and display new suggestions
+        dropdown.classList.remove("hidden");
+        _clear();
+
         // Regex to highlight match
         const regex = new RegExp(`(.*)(${inputValue})(.*)`, "i");
-        // Refresh div and display new suggestions
-        _clear();
         suggestions.forEach(artist => {
             // For each suggestion add list element highlighting match
             const item = document.createElement("li");

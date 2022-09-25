@@ -12,9 +12,9 @@
     <script src="./album.js" defer></script>
     <script src="./library.js" defer></script>
     <script src="./table.js" defer></script>
-    <script src="./loader.js" defer></script>
     <script src="./filter.js" defer></script>
     <script src="./modal.js" defer></script>
+    <script src="./index.js" defer></script>
 
 </head>
 
@@ -48,7 +48,8 @@
                         </select>
                         <div class="semicolon">:</div>
                         <input type="text" name="filter-value" id="filter-value"
-                            placeholder='e.g. "zeppelin", "beatles, rolling"'>
+                            placeholder='e.g. "zeppelin", "beatles, rolling"'
+                            autocomplete="off">
                         <button class="interactive light" type="submit">Apply filter</button>
                     </form>
                     <button class="interactive dark" id="open-modal">
