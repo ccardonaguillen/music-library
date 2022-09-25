@@ -14,6 +14,7 @@ var musicLibrary = (function () {
             albumList.unshift(newAlbum);
         } else {
             alert("This album already exists.");
+            console.log("Album ID: " + newAlbum.id)
         }
 
         events.emit("albumAdded", newAlbum);
