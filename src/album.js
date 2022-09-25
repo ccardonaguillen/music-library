@@ -1,4 +1,6 @@
-var Album = ({ title, artist, release_year, owned, format = [] }) => {
+var Album = (
+    { title, artist, release_year, owned, format = [] }
+) => {
     return {
         id: title.toLowerCase().replaceAll(/\W/g, "") +
             artist.toLowerCase().replaceAll(/\W/g, ""),
@@ -9,3 +11,5 @@ var Album = ({ title, artist, release_year, owned, format = [] }) => {
         format
     }
 };
+
+export default Album

@@ -1,6 +1,5 @@
-// import events from "./events.js"
+import events from "./events.js"
 
-// export default musicLibrary = (function () {
 var musicLibrary = (function () {
     var albumList = [];
 
@@ -52,4 +51,6 @@ var musicLibrary = (function () {
         sort
     }
 })();
+
+export default musicLibrary
 

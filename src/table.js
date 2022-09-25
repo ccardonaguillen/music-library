@@ -1,4 +1,7 @@
-// import { musicLibrary as library } from "./library.js"
+import events from "./events.js";
+import musicLibrary from "./library.js";
+import { filterController } from "./filter.js";
+
 var tableView = (function () {
     const contents = document.querySelector("table > tbody");
 
@@ -177,12 +180,12 @@ var tableController = (function () {
     
         switch (filterType) {
             case "title":
-                return album["title"].toLowerCase().includes(filterValue);
+                return album["title"].toLowerCase().includes(filterValue.toLowerCase());
             case "artist":
                 // Match any of the comma separated matches
                 const artistList = filterValue.replaceAll(" ", "").split(/[,;]/);
                 return artistList.some((artist) =>
-                    album["artist"].toLowerCase().includes(artist)
+                    album["artist"].toLowerCase().includes(artist.toLowerCase())
                 );
             case "release_year":
                 let match = (regex) => filterValue.match(regex);

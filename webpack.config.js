@@ -3,8 +3,8 @@ const path = require('path');
 module.exports = {
   mode: 'development',
   entry: {
-    en: './src/en.js',
-    es: './src/es.js',
+    en: './src/index.js',
+    es: './src/index.js',
   },
   output: {
     filename: '[name]/bundle.js',

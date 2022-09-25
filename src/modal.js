@@ -1,3 +1,5 @@
+import events from "./events.js";
+
 var modal = (function () {
     const overlay = document.querySelector(".modal-overlay"), 
         openButton = document.getElementById("open-modal"),

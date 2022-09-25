@@ -1,3 +1,10 @@
+import events from "./events.js"
+import Album from "./album.js"
+import musicLibrary from "./library.js"
+import "./table.js"
+import "./filter.js"
+import "./modal.js"
+
 const fileLoader = document.getElementById('file-loader');
 
 fileLoader.addEventListener('change', (event) => {
@@ -78,7 +85,7 @@ function parseAlbumLibrary(fileContent) {
 
 function addCollection (collection) {
     collection.forEach((album, idx) => {
-        newAlbum = Album({
+        var newAlbum = Album({
             title: album["Nombre"],
             artist: album["Artista"],
             release_year: album["Ano lanzamiento"],
@@ -93,6 +100,6 @@ function addCollection (collection) {
         musicLibrary.addAlbum(newAlbum);
     })
 
-    musicLibrary.sort("title", "asc")
+    musicLibrary.sort({ by: "title", ord: "asc"})
 };
 
