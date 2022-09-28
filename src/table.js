@@ -34,6 +34,8 @@ var tableView = (function () {
         
         _renderRow(album);
         _renderExtraInfo(album);
+
+        events.emit("rowAdded");
     }
 
     function _renderRow(album) {
@@ -175,17 +177,6 @@ var tableView = (function () {
         });
     }
 
-    // record_format,
-    //   album_format,
-    //   serial_num,
-    //   edition_year,
-    //   country,
-    //   record_label,
-    //   matrix_num,
-    //   condition,
-    //   comments,
-    //   jacket
-
     function _renderRecordInfo(container, album) {
         const fields = [
             {
@@ -259,6 +250,8 @@ var tableView = (function () {
         removeButton.addEventListener("click", function (){
             const id = row.getAttribute("data-id");
             musicLibrary.deleteAlbum(id);
+
+            events.emit("rowDeleted");
         });
 
         return dataCell

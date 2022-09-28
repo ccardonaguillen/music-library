@@ -6,12 +6,12 @@ var summaryView = (function () {
         tableContents = document.querySelector("table > tbody");
 
     events.on("filterApplied", _render);
-    events.on("albumAdded", _render);
-    events.on("albumDeleted", _render);
+    events.on("rowAdded", _render);
+    events.on("rowDeleted", _render);
 
     function _render() {
         const totalEntries = musicLibrary.getAlbumList().length, // Length of library list
-            shownEntries = tableContents.childElementCount; // Number of rows in table
+            shownEntries = tableContents.querySelectorAll("tr:not(.extra-info)").length; // Number of rows in table
 
         // If there are no albums in the library print welcome message
         summary.textContent =
