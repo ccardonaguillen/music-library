@@ -33,7 +33,6 @@ var tableView = (function () {
         if (!tableController.filterAlbum(album)) return;
         
         _renderRow(album);
-        _renderExtraInfo(album);
 
         events.emit("rowAdded");
     }
@@ -89,11 +88,30 @@ var tableView = (function () {
     
         // Append new row
         contents.appendChild(row);
+
+        row.addEventListener("click", () => {
+            const nextRow = row.nextSibling;
+
+            _collapseExtraInfo(); // Close any opened extra-info panels
+            // If the row had an extra-info panel then
+            // do nothing (effectively closing it)
+            if (nextRow.classList.contains("extra-info")) return;
+            _renderExtraInfo(album, row);
+        });
+
     }
 
-    function _renderExtraInfo(album) {
-        const row = document.createElement("tr");
-        row.classList.add("hidden", "extra-info");
+    function _collapseExtraInfo() {
+        const extraRows = document.querySelectorAll(".extra-info");
+
+        extraRows.forEach(row => {
+            row.parentElement.removeChild(row);
+        });
+    }
+
+    function _renderExtraInfo(album, row) {
+        const extraInfo = document.createElement("tr");
+        extraInfo.classList.add("extra-info");
         const dataCell = document.createElement("td");
         dataCell.setAttribute("colspan", 5);
 
@@ -119,12 +137,10 @@ var tableView = (function () {
         container.append(recordInfo);
 
         dataCell.appendChild(container);
-        row.appendChild(dataCell);
-        contents.appendChild(row);
+        extraInfo.appendChild(dataCell);
 
-        row.previousSibling.addEventListener("click", function() {
-            row.classList.toggle("hidden");
-        })
+        // Insert after
+        row.parentElement.insertBefore(extraInfo, row.nextSibling);
     }
 
     function _renderGeneralInfo(container, album) {
