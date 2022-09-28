@@ -28,7 +28,7 @@ var filterController = (function () {
         filterValue = document.getElementById("filter-value"),
         entriesCount = document.getElementById("entries-count");
 
-    filterSelect.addEventListener("change", _renderPlaceholder);
+    filterSelect.addEventListener("change", _resetFilter);
     filterForm.addEventListener("submit", _applyFilter);
     filterValue.addEventListener("input", _resetFilter);
 
@@ -62,12 +62,14 @@ var filterController = (function () {
         filterValue.placeholder = placeholder[filter];
     }
 
-    function _resetFilter() {
+    function _resetFilter(e) {
+        if (e.type === "input" && filterValue.value !== "") return;
         /* Reset filter when the input box is empty and apply empty filter */
-        if (filterValue.value === "") {
-            _renderPlaceholder();
-            _applyFilter();
-        }
+        
+        filterValue.value = "";
+        _renderPlaceholder();
+        _applyFilter();
+    
     
         return false;
     }    

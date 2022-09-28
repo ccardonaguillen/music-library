@@ -31,17 +31,24 @@ var tableView = (function () {
     function _renderAlbum(album) {
         // Apply filter. If false do not render
         if (!tableController.filterAlbum(album)) return;
+        
+        _renderRow(album);
+        _renderExtraInfo(album);
+    }
+
+    function _renderRow(album) {
         // Create a new row for the album
         const row = document.createElement("tr");
-    
         // Set album attribute as unique identifier for the row
+        row.classList.add("album-row");
         row.setAttribute("data-id", album.id);
-    
+
         // Add album info
-        const columns = ["title", "artist", "release_year", "owned", "format"];
+        const columns = ["title", "artist", "release_year", "owned", "favorite"];
         for (const prop of columns) {
             const dataCell = document.createElement("td");
 
+            let iconPath
             switch (prop) {
                 case "owned":
                     // Print green tick or red cross icon for yes or no resp.
@@ -49,7 +56,7 @@ var tableView = (function () {
                     const ownedIcon = document.createElement('img')
                     ownedIcon.classList.add('owned-icon');
     
-                    let iconPath =
+                    iconPath =
                         album[prop]
                             ? "check.svg"
                             : "close-red.svg"
@@ -57,8 +64,15 @@ var tableView = (function () {
     
                     dataCell.appendChild(ownedIcon)
                     break;
-                case "format":
-                    dataCell.textContent = album[prop].join(", ");
+                case "favorite":
+                    if (!album[prop]) break;
+                    const favIcon = document.createElement('img')
+                    favIcon.classList.add('owned-icon');
+    
+                    iconPath = "../images/heart.svg";
+                    favIcon.src = iconPath;
+    
+                    dataCell.appendChild(favIcon)
                     break;
                 default:
                     dataCell.textContent = album[prop];
@@ -68,38 +82,186 @@ var tableView = (function () {
         }
     
         // Create remove-album button
-        function createRemoveButton (row) {
-            // Create trashcan button and append it to row
-            const dataCell = document.createElement("td");
-            const removeButton = document.createElement("button");
-
-            removeButton.classList.add("remove-album", "img-button", "hidden");
-            removeButton.title = "Delete Album";
-
-            dataCell.appendChild(removeButton);
-
-            // Connect new row so that remove-icon only appears on hover
-            row.addEventListener("mouseenter", function () {
-                removeButton.classList.remove("hidden");
-            });
-            row.addEventListener("mouseleave", function () {
-                removeButton.classList.add("hidden");
-            });
-
-            // Connect button to removeAlbum function
-            removeButton.addEventListener("click", function (){
-                const id = row.getAttribute("data-id");
-                musicLibrary.deleteAlbum(id);
-            });
-
-            return dataCell
-        }
-
-        const removeButton = createRemoveButton(row);
-        row.appendChild(removeButton);
+        // const removeButton = _renderRemoveButton(row);
+        // row.appendChild(removeButton);
     
         // Append new row
         contents.appendChild(row);
+    }
+
+    function _renderExtraInfo(album) {
+        const row = document.createElement("tr");
+        row.classList.add("hidden", "extra-info");
+        const dataCell = document.createElement("td");
+        dataCell.setAttribute("colspan", 5);
+
+        const container = document.createElement("div");
+        container.classList.add("info-container");
+
+        const albumJacket = document.createElement("img");
+        albumJacket.setAttribute("src", album.jacket);
+        albumJacket.classList.add("jacket");
+
+        const generalInfo = document.createElement("div");
+        generalInfo.classList.add("general-info");
+        _renderGeneralInfo(generalInfo, album)
+        
+
+        const recordInfo = document.createElement("div");
+        recordInfo.classList.add("record-info");
+        _renderRecordInfo(recordInfo, album);
+
+        
+        container.append(albumJacket);
+        container.append(generalInfo);
+        container.append(recordInfo);
+
+        dataCell.appendChild(container);
+        row.appendChild(dataCell);
+        contents.appendChild(row);
+
+        row.previousSibling.addEventListener("click", function() {
+            row.classList.toggle("hidden");
+        })
+    }
+
+    function _renderGeneralInfo(container, album) {
+        const fields = [
+            {
+                key: "genre",
+                label: "Genre",
+                icon: "",
+            },
+            {
+                key: "topRS1",
+                label: "Top500 (RS1)",
+                icon: "",
+            },
+            {
+                key: "topRS3",
+                label: "Top500 (RS3)",
+                icon: "",
+            },
+        ];
+
+        const urls = [
+            {
+                key: "discogs",
+                label: "Discogs",
+                icon: "",
+            },
+            {
+                key: "wikipedia",
+                label: "Wikipedia",
+                icon: "",
+            },
+        ];
+
+        fields.forEach((field) => {
+            let text = document.createElement("p");
+            text.innerHTML = `<strong>${field.label}</strong>: ${
+                album[field.key]
+            }`;
+
+            container.appendChild(text);
+        });
+
+        urls.forEach((url) => {
+            let href = document.createElement("a");
+            href.setAttribute("href", album[url.key]);
+            href.innerHTML = `<strong>${url.label}</strong>`;
+
+            container.appendChild(href);
+        });
+    }
+
+    // record_format,
+    //   album_format,
+    //   serial_num,
+    //   edition_year,
+    //   country,
+    //   record_label,
+    //   matrix_num,
+    //   condition,
+    //   comments,
+    //   jacket
+
+    function _renderRecordInfo(container, album) {
+        const fields = [
+            {
+                key: "catalog_num",
+                label: "Catalog#",
+                icon: "",
+            },
+            {
+                key: "record_label",
+                label: "Label",
+                icon: "",
+            },
+            {
+                key: "country",
+                label: "Country",
+                icon: "",
+            },
+            {
+                key: "edition_year",
+                label: "Edition",
+                icon: "",
+            },
+            {
+                key: "matrix",
+                label: "Matrix",
+                icon: "",
+            },
+            {
+                key: "condition",
+                label: "Condition",
+                icon: "",
+            },
+            {
+                key: "notes",
+                label: "Notes",
+                icon: "",
+            }
+        ];
+
+        let format = document.createElement("p");
+        format.innerHTML = `<strong>Format</strong>: ${album.record_format} (${album.album_format})`;
+        container.appendChild(format);
+
+        fields.forEach(field => {
+            let text = document.createElement("p");
+            text.innerHTML = `<strong>${field.label}</strong>: ${album[field.key]}`;
+
+            container.appendChild(text);
+        })
+    }
+
+    function _renderRemoveButton(row) {
+        // Create trashcan button and append it to row
+        const dataCell = document.createElement("td");
+        const removeButton = document.createElement("button");
+
+        removeButton.classList.add("remove-album", "img-button", "hidden");
+        removeButton.title = "Delete Album";
+
+        dataCell.appendChild(removeButton);
+
+        // Connect new row so that remove-icon only appears on hover
+        row.addEventListener("mouseenter", function () {
+            removeButton.classList.remove("hidden");
+        });
+        row.addEventListener("mouseleave", function () {
+            removeButton.classList.add("hidden");
+        });
+
+        // Connect button to removeAlbum function
+        removeButton.addEventListener("click", function (){
+            const id = row.getAttribute("data-id");
+            musicLibrary.deleteAlbum(id);
+        });
+
+        return dataCell
     }
 })();
 
@@ -183,7 +345,7 @@ var tableController = (function () {
                 return album["title"].toLowerCase().includes(filterValue.toLowerCase());
             case "artist":
                 // Match any of the comma separated matches
-                const artistList = filterValue.replaceAll(" ", "").split(/[,;]/);
+                const artistList = filterValue.split(/\s*[,;]\s*/);
                 return artistList.some((artist) =>
                     album["artist"].toLowerCase().includes(artist.toLowerCase())
                 );
@@ -231,7 +393,7 @@ var tableController = (function () {
                 // In this filter "+" = "and" and "[,;/]" = "or"
                 let formatList = [];
                 if (filterValue.includes("+")) {
-                    formatList = filterValue.replaceAll(" ", "").split("+");
+                    formatList = filterValue.split(/\s*\+\s*/);
                     return formatList.every(
                         (format) =>
                             album["format"].findIndex(
@@ -239,7 +401,7 @@ var tableController = (function () {
                             ) != -1
                     );
                 } else {
-                    formatList = filterValue.replaceAll(" ", "").split(/[,;/]/);
+                    formatList = filterValue.split(/\s*[,;/]\s*/);
                     return formatList.some(
                         (format) =>
                             album["format"].findIndex(
