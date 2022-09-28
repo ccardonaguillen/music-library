@@ -239,16 +239,16 @@ td {
     cursor: default;
 }
 
-/* th:nth-of-type(1),
+th:nth-of-type(1),
 td:nth-of-type(1) {
-    padding-left: calc(5vw + 40px);
-} */
+    padding-left: calc(1.5vw + 15px);
+}
 
-tr:nth-of-type(4n+1) {
+tr:not(.extra-info):nth-of-type(2n+1) {
     background-color: rgba(211, 211, 211, 0.4);
 }
 
-tr:nth-of-type(2n+1):hover {
+tr:not(.extra-info):hover {
     background-color: lightgrey;
 }
 
