@@ -5,7 +5,8 @@ import { filterController } from "./filter.js";
 var tableView = (function () {
     const contents = document.querySelector("table > tbody");
 
-    events.on("albumAdded", _renderAlbum);
+    events.on("albumAdded", _update);
+    events.on("albumEdited", _update);
     events.on("librarySorted", _update);
     events.on("filterApplied", _update);
 
@@ -32,12 +33,6 @@ var tableView = (function () {
         // Apply filter. If false do not render
         if (!tableController.filterAlbum(album)) return;
         
-        _renderRow(album);
-
-        events.emit("rowAdded");
-    }
-
-    function _renderRow(album) {
         // Create a new row for the album
         const row = document.createElement("tr");
         // Set album attribute as unique identifier for the row
@@ -49,31 +44,23 @@ var tableView = (function () {
         for (const prop of columns) {
             const dataCell = document.createElement("td");
 
-            let iconPath
+            let iconPath = {
+                owned: { true: "check.svg", false: "close-red.svg" },
+                favorite: { true: "heart.svg", false: "blank.svg" },
+            };
+
+            let path
             switch (prop) {
                 case "owned":
-                    // Print green tick or red cross icon for yes or no resp.
-                    // dataCell.textContent = album[prop] ? "Yes" : "No";
-                    const ownedIcon = document.createElement('img')
-                    ownedIcon.classList.add('owned-icon');
-    
-                    iconPath =
-                        album[prop]
-                            ? "check.svg"
-                            : "close-red.svg"
-                    ownedIcon.src = "../images/" + iconPath;
-    
-                    dataCell.appendChild(ownedIcon)
-                    break;
                 case "favorite":
-                    if (!album[prop]) break;
-                    const favIcon = document.createElement('img')
-                    favIcon.classList.add('owned-icon');
+                    // Translate "true" or "false" to icon repr. accordingly
+                    const propIcon = document.createElement('img')
+                    propIcon.classList.add('cell-icon');
     
-                    iconPath = "../images/heart.svg";
-                    favIcon.src = iconPath;
+                    path = iconPath[prop][album[prop]];
+                    propIcon.src = "../images/" + path;
     
-                    dataCell.appendChild(favIcon)
+                    dataCell.appendChild(propIcon)
                     break;
                 default:
                     dataCell.textContent = album[prop];
@@ -95,10 +82,12 @@ var tableView = (function () {
             _collapseExtraInfo(); // Close any opened extra-info panels
             // If the row had an extra-info panel then
             // do nothing (effectively closing it)
-            if (nextRow.classList.contains("extra-info")) return;
+            if (nextRow && nextRow.classList.contains("extra-info")) return;
             _renderExtraInfo(album, row);
         });
 
+
+        events.emit("rowAdded");
     }
 
     function _collapseExtraInfo() {
@@ -129,7 +118,7 @@ var tableView = (function () {
 
         const recordInfo = document.createElement("div");
         recordInfo.classList.add("record-info");
-        _renderRecordInfo(recordInfo, album);
+        if (album.owned) _renderRecordInfo(recordInfo, album);
 
         
         container.append(albumJacket);
@@ -141,6 +130,10 @@ var tableView = (function () {
 
         // Insert after
         row.parentElement.insertBefore(extraInfo, row.nextSibling);
+
+        dataCell.addEventListener("click", () => {
+            events.emit("editButtonClicked", album);
+        })
     }
 
     function _renderGeneralInfo(container, album) {

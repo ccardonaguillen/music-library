@@ -35,7 +35,9 @@ var Album = (
         topRS3: topRS3 || "",
         discogs: discogs || "",
         wikipedia: wikipedia || "",
-        record_format: record_format || "",
+        record_format: typeof(record_format) === "string" ?
+                       Array(record_format) :
+                       record_format,
         album_format: album_format || "",
         catalog_num: catalog_num || "",
         edition_year: edition_year || "",

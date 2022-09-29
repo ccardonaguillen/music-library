@@ -7,15 +7,22 @@ var musicLibrary = (function () {
         return albumList;
     }
 
-    function addAlbum(newAlbum) {
-        /* If the albums exists log error message. If not add at the start */
-        if (albumList.every((album) => newAlbum.id !== album.id)) {
-            albumList.unshift(newAlbum);
+    function addAlbum(newAlbum, pos) {
+        // If position is provided then removes entry at pos and inserts new one
+        if (albumList.every((album) => newAlbum.id !== album.id) ||
+            newAlbum.id === albumList[pos].id) {
+            if (typeof(pos) === "number") {
+                albumList.splice(pos, 1, newAlbum);
+                events.emit("albumEdited");
+            } else {
+                albumList.unshift(newAlbum);
+                events.emit("albumAdded", newAlbum);
+            }
         } else {
+            // If the album exist log error message
             alert("This album already exists.");
             console.log("Repeated ID: " + newAlbum.id)
         }
-        events.emit("albumAdded", newAlbum);
     };
 
     function deleteAlbum(id) {
@@ -23,6 +30,27 @@ var musicLibrary = (function () {
         albumList = albumList.filter((album) => album.id !== id);
 
         events.emit("albumDeleted", id);
+    }
+
+    function editAlbum(id, newAlbum) {
+        // newAlbum is the album object containing the updated info
+        const albumIdx = albumList.findIndex(
+            (album) => id === album.id
+        );
+
+        addAlbum(newAlbum, albumIdx);
+    }
+
+    function editAlbumDetails(id, newInfo) {
+        const albumIdx = albumList.findIndex(
+            (album) => id === album.id
+        );
+
+        for (const prop in newInfo) {
+            albumList[albumIdx][prop] = newInfo[prop];
+        }
+
+        events.emit("albumEdited");
     }
 
     function sort({ by, ord = "asc" }) {
@@ -47,6 +75,7 @@ var musicLibrary = (function () {
         getAlbumList,
         addAlbum,
         deleteAlbum,
+        editAlbum,
         sort
     }
 })();

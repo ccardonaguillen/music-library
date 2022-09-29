@@ -1,4 +1,6 @@
 # Ignore npm modules
 node_modules/
 
+to-do-list.txt
+
 package-lock.json
