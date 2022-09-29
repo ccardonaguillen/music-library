@@ -76,7 +76,7 @@
                         </button>
                     </div>
                 </div>
-                <input type="file" name="file-loader" id="file-loader" />
+                <input type="file" name="file-loader" id="file-loader" class="hidden"/>
                 <table id="music-library">
                     <thead class="library-header">
                         <tr>
@@ -160,6 +160,7 @@
                                     name="release_year"
                                     id="new-release-year"
                                     placeholder="e.g. 1966"
+                                    required
                                 />
                             </div>
                             <div>
@@ -256,7 +257,7 @@
                                 </div>
                             </div>
                             <div>
-                                <label for="new-artist">Wikpedia Article</label>
+                                <label for="new-wikipedia">Wikpedia Article</label>
                                 <input
                                     type="url"
                                     name="wikipedia"
@@ -265,16 +266,24 @@
                                 />
                             </div>
                             <div>
-                                <label for="new-artist">Discogs Link</label>
+                                <label for="new-discogs">Discogs Link</label>
                                 <input
                                     type="url"
-                                    name="artist"
-                                    id="new-artist"
+                                    name="discogs"
+                                    id="new-discogs"
                                     placeholder="www.discogs.com/release/..."
                                 />
                             </div>
+                            <div>
+                                <label for="new-jacket">Album Jacket</label>
+                                <input
+                                    type="url"
+                                    name="jacket"
+                                    id="new-jacket"
+                                />
+                            </div>
                         </fieldset>
-                        <fieldset class="" disabled>
+                        <fieldset id="record-info-fs" class="hidden" disabled>
                             <legend>Record Info</legend>
                             <div>
                                 <label for="record_format">Record format(s)</label>
@@ -386,11 +395,11 @@
                                 />
                             </div>
                             <div>
-                                <label for="new-artist">Matrix</label>
+                                <label for="new-matrix">Matrix</label>
                                 <input
                                     type="text"
-                                    name="artist"
-                                    id="new-artist"
+                                    name="matrix"
+                                    id="new-matrix"
                                     placeholder="e.g. 04097-A-2 SHZE 186 A - X2"
                                 />
                             </div>

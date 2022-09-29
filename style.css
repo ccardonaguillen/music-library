@@ -350,7 +350,7 @@ th:nth-of-type(3)> div {
     /* clip-path: polygon(50% 35%, 20% 65%, 80% 65%);; */
 }
 
-.owned-icon {
+.cell-icon {
     height: 2.5rem;
     width: 2.5rem;
     margin: 0;
@@ -429,7 +429,7 @@ th:nth-of-type(3)> div {
 }
 
 .form-content {
-    max-height: 60vw;
+    max-height: 80vw;
     overflow-y: auto;
     -ms-overflow-style: none;  /* IE and Edge */
     scrollbar-width: none;  /* Firefox */
@@ -590,8 +590,8 @@ fieldset> legend {
 
 .extra-info {
        height: 200px;
-       box-shadow: inset 0 8px 15px -15px black,
-                   inset 0 -8px 15px -15px black;
+       box-shadow: inset 0 8px 13px -15px black,
+                   inset 0 -8px 13px -15px black;
 }
 
 .info-container {
