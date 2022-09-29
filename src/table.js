@@ -54,13 +54,22 @@ var tableView = (function () {
                 case "owned":
                 case "favorite":
                     // Translate "true" or "false" to icon repr. accordingly
-                    const propIcon = document.createElement('img')
-                    propIcon.classList.add('cell-icon');
-    
+                    const icon = document.createElement('img')
+                    icon.classList.add("cell-icon");
+                
+                    if (prop === "favorite") icon.classList.add("fav-icon");
+
                     path = iconPath[prop][album[prop]];
-                    propIcon.src = "../images/" + path;
+                    icon.src = "../images/" + path;
     
-                    dataCell.appendChild(propIcon)
+                    dataCell.appendChild(icon)
+
+                    icon.addEventListener("click", (e) => {
+                        e.stopPropagation()
+                        musicLibrary.editAlbumDetails(album.id, {
+                            [prop]: !album[prop],
+                        });
+                    })
                     break;
                 default:
                     dataCell.textContent = album[prop];

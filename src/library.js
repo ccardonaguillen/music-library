@@ -76,6 +76,7 @@ var musicLibrary = (function () {
         addAlbum,
         deleteAlbum,
         editAlbum,
+        editAlbumDetails,
         sort
     }
 })();
