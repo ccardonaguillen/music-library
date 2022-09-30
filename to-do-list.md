@@ -1,6 +1,6 @@
 ## TO DO
 - Retocar anchura de columnas "owned" y "favorite"
-- Adapt design for mobiles
+- Adaptar diseño para moviles
 
 ## POSSIBLE FUTURE ADDITIONS
 - Añadir datos basicos disco desde Discogs (u otra pagina?) pasando el link

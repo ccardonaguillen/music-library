@@ -5,7 +5,7 @@ import musicLibrary from "./library.js";
 const lang = window.navigator.language.slice(0, 2);
 
 var modalController = (function () {
-    const overlay = document.querySelector(".modal-overlay"), 
+    const overlay = document.querySelector(".modal-overlay"),
         openButton = document.getElementById("open-modal"),
         closeButton = document.getElementById("close-modal"),
         modal = document.querySelector(".modal"),
@@ -15,27 +15,27 @@ var modalController = (function () {
     openButton.addEventListener("click", () => _open("new"));
     closeButton.addEventListener("click", close);
 
-    events.on("editAlbum", album => _open("edit", album));
+    events.on("editAlbum", (album) => _open("edit", album));
 
     function _open(mode, album) {
         /* Display form modal over main window and focus on first input */
         overlay.classList.remove("hidden");
         document.getElementById("new-title").focus();
 
-        if (mode==="new") {
-            modal.setAttribute("data-mode", "new"); 
-            modal.setAttribute("data-album-id", ""); 
+        if (mode === "new") {
+            modal.setAttribute("data-mode", "new");
+            modal.setAttribute("data-album-id", "");
             header.textContent = lang === "es" ? "Añadir Álbum" : "New Album";
             resetButton.textContent = "Reset";
-        }  else if (mode==="edit") {
-            modal.setAttribute("data-mode", "edit"); 
-            modal.setAttribute("data-album-id", album.id); 
+        } else if (mode === "edit") {
+            modal.setAttribute("data-mode", "edit");
+            modal.setAttribute("data-album-id", album.id);
             header.textContent = lang === "es" ? "Editar Álbum" : "Edit Album";
             resetButton.textContent = lang === "es" ? "Cancelar" : "Cancel";
             _populateForm(album);
         }
     }
-    
+
     function close() {
         /* Hide modal */
         overlay.classList.add("hidden");
@@ -66,14 +66,18 @@ var modalController = (function () {
                     );
 
                     for (let box of checkBoxes) {
-                        if (album[prop].some(format => format === box.value)) {
+                        if (
+                            album[prop].some((format) => format === box.value)
+                        ) {
                             box.click();
                         }
                     }
                     break;
-            
+
                 default:
-                    const input = document.querySelector(`input[name="${prop}"]`);
+                    const input = document.querySelector(
+                        `input[name="${prop}"]`
+                    );
 
                     if (input && album[prop] !== "") {
                         input.value = album[prop];
@@ -84,8 +88,8 @@ var modalController = (function () {
     }
 
     return {
-        close
-    }
+        close,
+    };
 })();
 
 var albumFormController = (function () {
@@ -111,23 +115,23 @@ var albumFormController = (function () {
         form.reset();
         _disableRecordFieldset();
     }
-    
+
     function _disableRecordFieldset() {
         /* Disable second fieldset  (Record info) */
         recordFieldSet.classList.add("hidden");
         recordFieldSet.disabled = true;
     }
-    
+
     function _enableRecordFieldset() {
         /* Enable second fieldset  (Record info) */
         recordFieldSet.classList.remove("hidden");
         recordFieldSet.disabled = false;
     }
-    
+
     function _submitNewAlbum(e) {
         // Prevent default submit action
         e.preventDefault();
-    
+
         // Create new album object and add it to the library
         const newAlbum = Album(_processNewAlbumForm());
 
@@ -142,23 +146,24 @@ var albumFormController = (function () {
         // Close form modal
         modalController.close();
     }
-    
+
     function _processNewAlbumForm() {
         /* Process new album form to pass it to new album */
         let formData = new FormData(form);
-    
+
         let formContent = Object.fromEntries(formData.entries());
 
         formContent["owned"] = formContent["owned"] === "true" ? true : false;
-        formContent["favorite"] = formContent["favorite"] === "true" ? true : false;
+        formContent["favorite"] =
+            formContent["favorite"] === "true" ? true : false;
         formContent["format"] = formData.getAll("format");
-    
+
         return formContent;
     }
 
     return {
-        reset
-    }
+        reset,
+    };
 })();
 
 var artistSuggestions = (function () {
@@ -179,39 +184,38 @@ var artistSuggestions = (function () {
         if (inputValue === "") {
             input.placeholder = input.placeholder;
             _close();
-    
+
             return;
         }
-        musicLibrary.getAlbumList().map(
-            (album) => album.artist
-        );
+        musicLibrary.getAlbumList().map((album) => album.artist);
         // Compute artist suggestions given the current albums in the library
         var suggestions = musicLibrary.getAlbumList().reduce((sugg, album) => {
-                const artist = album.artist;
-                if (artist.toLowerCase().includes(inputValue.toLowerCase())) {
-                    // Avoid duplicates
-                    if (sugg.indexOf(artist) === -1 ) sugg.push(artist);
-                } 
-                return sugg
-            }, []);
-        if (!suggestions.length) { // Hide dropdown if not suggestions
+            const artist = album.artist;
+            if (artist.toLowerCase().includes(inputValue.toLowerCase())) {
+                // Avoid duplicates
+                if (sugg.indexOf(artist) === -1) sugg.push(artist);
+            }
+            return sugg;
+        }, []);
+        if (!suggestions.length) {
+            // Hide dropdown if not suggestions
             _close();
             return;
-        }    
+        }
         // Refresh div and display new suggestions
         dropdown.classList.remove("hidden");
         _clear();
 
         // Regex to highlight match
         const regex = new RegExp(`(.*)(${inputValue})(.*)`, "i");
-        suggestions.forEach(artist => {
+        suggestions.forEach((artist) => {
             // For each suggestion add list element highlighting match
             const item = document.createElement("li");
             var match = artist.match(regex);
 
             item.innerHTML = `${match[1]}<strong>${match[2]}</strong>${match[3]}`;
             list.appendChild(item);
-    
+
             // Add event listener to select suggestion
             item.addEventListener("click", _inputSuggestion);
         });
@@ -228,7 +232,7 @@ var artistSuggestions = (function () {
         /* Hide suggestions box */
         // Do not register clicks in the input box
         if (e && e.target === input) return;
-            
+
         // If the dropdown is already hidden do nothing
         if (!dropdown.classList.contains("hidden")) {
             _clear();
@@ -239,9 +243,7 @@ var artistSuggestions = (function () {
     function _inputSuggestion() {
         /* Choose selected item and add it to the input */
         input.value = this.textContent;
-    
+
         _close();
-    }    
+    }
 })();
-
-

@@ -1,4 +1,4 @@
-import events from "./events.js"
+import events from "./events.js";
 
 var musicLibrary = (function () {
     var albumList = [];
@@ -9,9 +9,11 @@ var musicLibrary = (function () {
 
     function addAlbum(newAlbum, pos) {
         // If position is provided then removes entry at pos and inserts new one
-        if (albumList.every((album) => newAlbum.id !== album.id) ||
-            newAlbum.id === albumList[pos].id) {
-            if (typeof(pos) === "number") {
+        if (
+            albumList.every((album) => newAlbum.id !== album.id) ||
+            newAlbum.id === albumList[pos].id
+        ) {
+            if (typeof pos === "number") {
                 albumList.splice(pos, 1, newAlbum);
                 events.emit("albumEdited");
             } else {
@@ -21,9 +23,9 @@ var musicLibrary = (function () {
         } else {
             // If the album exist log error message
             alert("This album already exists.");
-            console.log("Repeated ID: " + newAlbum.id)
+            console.log("Repeated ID: " + newAlbum.id);
         }
-    };
+    }
 
     function deleteAlbum(id) {
         /* Delete album with a given ID */
@@ -34,17 +36,13 @@ var musicLibrary = (function () {
 
     function editAlbum(id, newAlbum) {
         // newAlbum is the album object containing the updated info
-        const albumIdx = albumList.findIndex(
-            (album) => id === album.id
-        );
+        const albumIdx = albumList.findIndex((album) => id === album.id);
 
         addAlbum(newAlbum, albumIdx);
     }
 
     function editAlbumDetails(id, newInfo) {
-        const albumIdx = albumList.findIndex(
-            (album) => id === album.id
-        );
+        const albumIdx = albumList.findIndex((album) => id === album.id);
 
         for (const prop in newInfo) {
             albumList[albumIdx][prop] = newInfo[prop];
@@ -82,9 +80,8 @@ var musicLibrary = (function () {
         editAlbum,
         editAlbumDetails,
         getAlbum,
-        sort
-    }
+        sort,
+    };
 })();
 
-export default musicLibrary
-
+export default musicLibrary;

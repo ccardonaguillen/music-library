@@ -34,14 +34,15 @@ var tableView = (function () {
 
     function _removeRow(id) {
         // Ask confirmation before removing album
-        const confirmDelete = lang === "es" ?
-                        "¿Estás seguro de que quiere borrar este álbum?" :
-                        "Are you sure you want to delete this album?"
+        const confirmDelete =
+            lang === "es"
+                ? "¿Estás seguro de que quiere borrar este álbum?"
+                : "Are you sure you want to delete this album?";
         if (!confirm(confirmDelete)) return;
-    
+
         // Remove row and album from library
-        const row = document.querySelector(`tr[data-id=${id}]`)
-        
+        const row = document.querySelector(`tr[data-id=${id}]`);
+
         contents.removeChild(row);
         musicLibrary.deleteAlbum(id);
         _collapseExtraInfo();
@@ -50,7 +51,7 @@ var tableView = (function () {
     function _renderAlbum(album) {
         // Apply filter. If false do not render
         if (!tableController.filterAlbum(album)) return;
-        
+
         // Create a new row for the album
         const row = document.createElement("tr");
         // Set album attribute as unique identifier for the row
@@ -63,10 +64,16 @@ var tableView = (function () {
         optionsButton.addEventListener("click", (e) => {
             e.stopImmediatePropagation();
             optionsModal.open(e.x, e.y, album);
-        })
+        });
 
         // Add album info
-        const columns = ["title", "artist", "release_year", "owned", "favorite"];
+        const columns = [
+            "title",
+            "artist",
+            "release_year",
+            "owned",
+            "favorite",
+        ];
         for (const prop of columns) {
             const dataCell = document.createElement("td");
 
@@ -75,27 +82,27 @@ var tableView = (function () {
                 favorite: { true: "heart.svg", false: "blank.svg" },
             };
 
-            let path
+            let path;
             switch (prop) {
                 case "owned":
                 case "favorite":
                     // Translate "true" or "false" to icon repr. accordingly
-                    const icon = document.createElement('img')
+                    const icon = document.createElement("img");
                     icon.classList.add("cell-icon");
-                
+
                     if (prop === "favorite") icon.classList.add("fav-icon");
 
                     path = iconPath[prop][album[prop]];
                     icon.src = "../images/" + path;
-    
-                    dataCell.appendChild(icon)
+
+                    dataCell.appendChild(icon);
 
                     icon.addEventListener("click", (e) => {
-                        e.stopPropagation()
+                        e.stopPropagation();
                         musicLibrary.editAlbumDetails(album.id, {
                             [prop]: !album[prop],
                         });
-                    })
+                    });
                     break;
                 default:
                     dataCell.textContent = album[prop];
@@ -110,7 +117,7 @@ var tableView = (function () {
         row.addEventListener("click", () => {
             const nextRow = row.nextSibling;
 
-            _collapseExtraInfo(); 
+            _collapseExtraInfo();
             // Close any opened extra-info panels
             // If the row had an extra-info panel then
             // do nothing (effectively closing it)
@@ -124,7 +131,7 @@ var tableView = (function () {
     function _collapseExtraInfo() {
         const extraRows = document.querySelectorAll(".extra-info");
 
-        extraRows.forEach(row => {
+        extraRows.forEach((row) => {
             row.parentElement.removeChild(row);
         });
     }
@@ -144,14 +151,12 @@ var tableView = (function () {
 
         const generalInfo = document.createElement("div");
         generalInfo.classList.add("general-info");
-        _renderGeneralInfo(generalInfo, album)
-        
+        _renderGeneralInfo(generalInfo, album);
 
         const recordInfo = document.createElement("div");
         recordInfo.classList.add("record-info");
         if (album.owned) _renderRecordInfo(recordInfo, album);
 
-        
         container.append(albumJacket);
         container.append(generalInfo);
         container.append(recordInfo);
@@ -208,6 +213,7 @@ var tableView = (function () {
             let href = document.createElement("a");
             href.setAttribute("href", album[url.key]);
             href.innerHTML = `<strong>${url.label}</strong>`;
+            href.setAttribute("target", "_blank");
 
             container.appendChild(href);
         });
@@ -249,19 +255,22 @@ var tableView = (function () {
                 key: "notes",
                 label: lang === "es" ? "Obs." : "Notes",
                 icon: "",
-            }
+            },
         ];
 
         let format = document.createElement("p");
-        format.innerHTML = `<strong>Format</strong>: ${album.record_format} (${album.album_format})`;
+        const formatLabel = lang === "es" ? "Formato" : "Format";
+        format.innerHTML = `<strong>${formatLabel}</strong>: ${album.record_format} (${album.album_format})`;
         container.appendChild(format);
 
-        fields.forEach(field => {
+        fields.forEach((field) => {
             let text = document.createElement("p");
-            text.innerHTML = `<strong>${field.label}</strong>: ${album[field.key]}`;
+            text.innerHTML = `<strong>${field.label}</strong>: ${
+                album[field.key]
+            }`;
 
             container.appendChild(text);
-        })
+        });
     }
 
     function _appendOptionsButton(row) {
@@ -271,11 +280,9 @@ var tableView = (function () {
 
         dataCell.classList.add("album-options");
 
-        button.setAttribute("src", "../images/dots-vertical.svg")
-        button.classList.add("cell-icon")
-        button.title = lang === "es" ?
-                        "Opciones" :
-                        "Album Options";
+        button.setAttribute("src", "../images/dots-vertical.svg");
+        button.classList.add("cell-icon");
+        button.title = lang === "es" ? "Opciones" : "Album Options";
         button.style.visibility = "hidden";
 
         dataCell.appendChild(button);
@@ -294,7 +301,7 @@ var tableView = (function () {
 
 var tableController = (function () {
     const contents = document.querySelector("table > tbody"),
-         sortableHeaders = document.querySelectorAll("table th.sortable");
+        sortableHeaders = document.querySelectorAll("table th.sortable");
     var currSorting = { by: "title", ord: "asc" };
 
     sortableHeaders.forEach((header) => {
@@ -305,7 +312,7 @@ var tableController = (function () {
         const header = e.currentTarget;
         const newSortBy = header.getAttribute("value");
         const { by: sortBy, ord: sortOrd } = currSorting;
-    
+
         // If sorting new row flip row order, else row order as asc as default
         if (newSortBy === sortBy) {
             currSorting.ord = sortOrd === "asc" ? "desc" : "asc";
@@ -313,15 +320,15 @@ var tableController = (function () {
             currSorting.by = newSortBy;
             currSorting.ord = "asc";
         }
-    
+
         // Sort library albums;
         musicLibrary.sort(currSorting);
-    
+
         // Remove all sorting arrows and display the corresponding one
         _hideSortingArrows();
         _renderSortingArrow(header);
     }
-    
+
     function _renderSortingArrow(header) {
         /* Add sorting arrows with the correpsonding order in the clicked header */
         const sortArrow = header.querySelector(".sort-arrow");
@@ -329,12 +336,12 @@ var tableController = (function () {
         sortArrow.classList.add(currSorting.ord);
         sortArrow.classList.remove("hidden");
     }
-    
+
     function _hideSortingArrows() {
         /* Remove all sorting arrows form all headers */
         sortableHeaders.forEach((header) => {
             const sortArrow = header.querySelector(".sort-arrow");
-    
+
             sortArrow.classList.add("hidden");
             sortArrow.classList.remove("asc");
             sortArrow.classList.remove("desc");
@@ -351,13 +358,15 @@ var tableController = (function () {
     function filterAlbum(album) {
         var currFilter = filterController.getCurrentFilter();
         var { type: filterType, value: filterValue } = currFilter;
-    
+
         // Reset display if no filter apply (input empty) do nothing
         if (filterValue === "") return true;
-    
+
         switch (filterType) {
             case "title":
-                return album["title"].toLowerCase().includes(filterValue.toLowerCase());
+                return album["title"]
+                    .toLowerCase()
+                    .includes(filterValue.toLowerCase());
             case "artist":
                 // Match any of the comma separated matches
                 const artistList = filterValue.split(/\s*[,;]\s*/);
@@ -371,7 +380,7 @@ var tableController = (function () {
                     regexGt = /(?:^>\s?(\d+)$)/, // Greater than
                     regexLt = /(?:^<\s?(\d+)$)/, // Lower than
                     regexBtw = /(?:^(\d+)\s?[-,/;]\s?(\d+)$)/; //Two values interval
-    
+
                 if (match(regexEq)) {
                     return album["release_year"] == match(regexEq)[1];
                 } else if (match(regexGt)) {
@@ -386,16 +395,27 @@ var tableController = (function () {
                 } else {
                     return false;
                 }
-    
+
             case "owned":
                 // Allow the use of different words for true and false
-                if (filterValue.toLowerCase() in [
-                    "1", "yes", "true", "own", "sí", "si", "adq", "adquirido"
-                ]) {
+                if (
+                    filterValue.toLowerCase() in
+                    ["1", "yes", "true", "own", "sí", "si", "adq", "adquirido"]
+                ) {
                     return album["owned"];
-                } else if (filterValue.toLowerCase() in [
-                    "0", "no", "not", "false", "!owned", "want", "!adq", "!adquirido"
-                ]) {
+                } else if (
+                    filterValue.toLowerCase() in
+                    [
+                        "0",
+                        "no",
+                        "not",
+                        "false",
+                        "!owned",
+                        "want",
+                        "!adq",
+                        "!adquirido",
+                    ]
+                ) {
                     return !album["owned"];
                 } else {
                     return true;
@@ -408,7 +428,8 @@ var tableController = (function () {
                     return formatList.every(
                         (format) =>
                             album["format"].findIndex(
-                                (val) => val.toLowerCase() === format.toLowerCase()
+                                (val) =>
+                                    val.toLowerCase() === format.toLowerCase()
                             ) != -1
                     );
                 } else {
@@ -416,7 +437,8 @@ var tableController = (function () {
                     return formatList.some(
                         (format) =>
                             album["format"].findIndex(
-                                (val) => val.toLowerCase() === format.toLowerCase()
+                                (val) =>
+                                    val.toLowerCase() === format.toLowerCase()
                             ) != -1
                     );
                 }
@@ -427,30 +449,29 @@ var tableController = (function () {
     }
 
     return {
-        filterAlbum
-    }
+        filterAlbum,
+    };
 })();
 
-
-var optionsModal = (function(album) {
+var optionsModal = (function (album) {
     const modal = document.getElementById("options-modal");
 
-    modal.addEventListener("mouseleave", close)
+    modal.addEventListener("mouseleave", close);
 
     function open(x, y, album) {
         const editAlbum = document.getElementById("edit-album"),
             delAlbum = document.getElementById("delete-album");
 
-        _render(x, y)
+        _render(x, y);
         modal.classList.remove("hidden");
 
         editAlbum.addEventListener("click", () => {
             events.emit("editAlbum", album);
-        })
+        });
 
         delAlbum.addEventListener("click", () => {
             events.emit("removeRow", album.id);
-        })
+        });
     }
 
     function close() {
@@ -460,7 +481,6 @@ var optionsModal = (function(album) {
         editAlbum.replaceWith(editAlbum.cloneNode(true));
         delAlbum.replaceWith(delAlbum.cloneNode(true));
         modal.classList.add("hidden");
-        
     }
 
     function _render(x, y) {
@@ -469,6 +489,6 @@ var optionsModal = (function(album) {
     }
 
     return {
-        open
-    }
+        open,
+    };
 })();

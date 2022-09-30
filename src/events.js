@@ -23,4 +23,4 @@ var events = {
     },
 };
 
-export default events
+export default events;

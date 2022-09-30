@@ -13,19 +13,21 @@ var summaryView = (function () {
 
     function _render() {
         const totalEntries = musicLibrary.getAlbumList().length, // Length of library list
-            shownEntries = tableContents.querySelectorAll("tr:not(.extra-info)").length; // Number of rows in table
+            shownEntries = tableContents.querySelectorAll(
+                "tr:not(.extra-info)"
+            ).length; // Number of rows in table
 
         // If there are no albums in the library print welcome message
         if (lang === "es") {
             summary.textContent =
-            totalEntries === 0
-                ? "No hay ningún álbum en la colección. Añade uno usando el botón"
-                : `Mostrando ${shownEntries} de ${totalEntries} álbums`;
+                totalEntries === 0
+                    ? "No hay ningún álbum en la colección. Añade uno usando el botón"
+                    : `Mostrando ${shownEntries} de ${totalEntries} álbums`;
         } else {
             summary.textContent =
-            totalEntries === 0
-                ? "No albums in the library. Add one by clicking the button"
-                : `Showing ${shownEntries} out of ${totalEntries} albums`;
+                totalEntries === 0
+                    ? "No albums in the library. Add one by clicking the button"
+                    : `Showing ${shownEntries} out of ${totalEntries} albums`;
         }
     }
 })();
@@ -48,15 +50,15 @@ var filterController = (function () {
     function _applyFilter(e = null) {
         // Prevent default submit behaviour
         if (e) e.preventDefault();
-    
+
         // Update current filter with values from the filter form
         currFilter["type"] = filterSelect.value;
         currFilter["value"] = document.getElementById("filter-value").value;
-    
+
         // Update table
         events.emit("filterApplied", currFilter);
     }
-    
+
     function _renderPlaceholder() {
         /* Update placeholder message according to the selected option */
         const filter = filterSelect.value;
@@ -66,7 +68,7 @@ var filterController = (function () {
             artist: '"zeppelin", "beatles, rolling"',
             release_year: '"1990", "1-2000", ">1900", "<1980"',
             owned: '"true", "no", "not owned"',
-            format: '"Vynil", "cd+casette", "vynil/CD"'
+            format: '"Vynil", "cd+casette", "vynil/CD"',
         };
 
         filterValue.placeholder = prefix + placeholder[filter];
@@ -75,18 +77,17 @@ var filterController = (function () {
     function _resetFilter(e) {
         if (e.type === "input" && filterValue.value !== "") return;
         /* Reset filter when the input box is empty and apply empty filter */
-        
+
         filterValue.value = "";
         _renderPlaceholder();
         _applyFilter();
-    
-    
+
         return false;
-    }    
+    }
 
     return {
         getCurrentFilter,
-    }
+    };
 })();
 
-export { filterController }
+export { filterController };
