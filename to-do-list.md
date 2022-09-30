@@ -18,3 +18,5 @@ poder especificar posicion
 - Cambiar modo de editar con formulario utilizando funcion "editAlbumDetails" en vez de "addAlbum"
 
 - Añadir clases a las diferentes columnas para facilitar la seleccion en CSS
+
+- Generalizar sugerencias y añadir a otros campos (Páis, sello, etc.)

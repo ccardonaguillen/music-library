@@ -608,10 +608,12 @@ fieldset> legend {
     box-sizing: border-box;
     position: absolute;
     max-height: 200px;
-    width: 300px;
+    width: 350px;
     background-color: white;
-    padding: 0.8rem 0rem;
-    border-radius:6px;
+    padding: 0.5rem 0rem;
+    margin-top: -0.2rem;
+    margin-left: 0.15rem;
+    border-radius: 0 0 6px 6px;
     border: 1px solid var(--shadow-light);
     border-top: none;
     overflow: auto;

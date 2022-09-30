@@ -161,87 +161,87 @@ var albumFormController = (function () {
     }
 })();
 
-// var artistSuggestions = (function () {
-//     const input = document.getElementById("new-artist"),
-//         dropdown = document.querySelector(".suggestions"),
-//         list = dropdown.firstElementChild;
+var artistSuggestions = (function () {
+    const input = document.getElementById("new-artist"),
+        dropdown = document.querySelector(".suggestions"),
+        list = dropdown.firstElementChild;
 
-//     // Suggest artists when inputing values or when clicking in input
-//     input.addEventListener("input", _render);
-//     input.addEventListener("focus", _render);
+    // Suggest artists when inputing values or when clicking in input
+    input.addEventListener("input", _render);
+    input.addEventListener("focus", _render);
 
-//     // Close suggestions div when clicking outside suggestion box
-//     document.addEventListener("click", _close, true);
+    // Close suggestions div when clicking outside suggestion box
+    document.addEventListener("click", _close, true);
 
-//     function _render(suggestedArtists) {
-//         const inputValue = input.value;
-//         // If user clears input, display placeholder and close suggestions
-//         if (inputValue === "") {
-//             input.placeholder = input.placeholder;
-//             _close();
+    function _render(suggestedArtists) {
+        const inputValue = input.value;
+        // If user clears input, display placeholder and close suggestions
+        if (inputValue === "") {
+            input.placeholder = input.placeholder;
+            _close();
     
-//             return;
-//         }
-//         musicLibrary.getAlbumList().map(
-//             (album) => album.artist
-//         );
-//         // Compute artist suggestions given the current albums in the library
-//         var suggestions = musicLibrary.getAlbumList().reduce((sugg, album) => {
-//                 const artist = album.artist;
-//                 if (artist.toLowerCase().includes(inputValue.toLowerCase())) {
-//                     // Avoid duplicates
-//                     if (sugg.indexOf(artist) === -1 ) sugg.push(artist);
-//                 } 
-//                 return sugg
-//             }, []);
-//         if (!suggestions.length) { // Hide dropdown if not suggestions
-//             _close();
-//             return;
-//         }    
-//         // Refresh div and display new suggestions
-//         dropdown.classList.remove("hidden");
-//         _clear();
+            return;
+        }
+        musicLibrary.getAlbumList().map(
+            (album) => album.artist
+        );
+        // Compute artist suggestions given the current albums in the library
+        var suggestions = musicLibrary.getAlbumList().reduce((sugg, album) => {
+                const artist = album.artist;
+                if (artist.toLowerCase().includes(inputValue.toLowerCase())) {
+                    // Avoid duplicates
+                    if (sugg.indexOf(artist) === -1 ) sugg.push(artist);
+                } 
+                return sugg
+            }, []);
+        if (!suggestions.length) { // Hide dropdown if not suggestions
+            _close();
+            return;
+        }    
+        // Refresh div and display new suggestions
+        dropdown.classList.remove("hidden");
+        _clear();
 
-//         // Regex to highlight match
-//         const regex = new RegExp(`(.*)(${inputValue})(.*)`, "i");
-//         suggestions.forEach(artist => {
-//             // For each suggestion add list element highlighting match
-//             const item = document.createElement("li");
-//             var match = artist.match(regex);
+        // Regex to highlight match
+        const regex = new RegExp(`(.*)(${inputValue})(.*)`, "i");
+        suggestions.forEach(artist => {
+            // For each suggestion add list element highlighting match
+            const item = document.createElement("li");
+            var match = artist.match(regex);
 
-//             item.innerHTML = `${match[1]}<strong>${match[2]}</strong>${match[3]}`;
-//             list.appendChild(item);
+            item.innerHTML = `${match[1]}<strong>${match[2]}</strong>${match[3]}`;
+            list.appendChild(item);
     
-//             // Add event listener to select suggestion
-//             item.addEventListener("click", _inputSuggestion);
-//         });
-//     }
+            // Add event listener to select suggestion
+            item.addEventListener("click", _inputSuggestion);
+        });
+    }
 
-//     function _clear() {
-//         /* Delete all suggestions */
-//         while (list.lastElementChild) {
-//             list.lastElementChild.remove();
-//         }
-//     }
+    function _clear() {
+        /* Delete all suggestions */
+        while (list.lastElementChild) {
+            list.lastElementChild.remove();
+        }
+    }
 
-//     function _close(e = null) {
-//         /* Hide suggestions box */
-//         // Do not register clicks in the input box
-//         if (e && e.target === input) return;
+    function _close(e = null) {
+        /* Hide suggestions box */
+        // Do not register clicks in the input box
+        if (e && e.target === input) return;
             
-//         // If the dropdown is already hidden do nothing
-//         if (!dropdown.classList.contains("hidden")) {
-//             _clear();
-//             dropdown.classList.add("hidden");
-//         }
-//     }
+        // If the dropdown is already hidden do nothing
+        if (!dropdown.classList.contains("hidden")) {
+            _clear();
+            dropdown.classList.add("hidden");
+        }
+    }
 
-//     function _inputSuggestion() {
-//         /* Choose selected item and add it to the input */
-//         input.value = this.textContent;
+    function _inputSuggestion() {
+        /* Choose selected item and add it to the input */
+        input.value = this.textContent;
     
-//         _close();
-//     }    
-// })();
+        _close();
+    }    
+})();
 
 
