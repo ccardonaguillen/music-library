@@ -80,6 +80,7 @@
                 <table id="music-library">
                     <thead class="library-header">
                         <tr>
+                            <th class="album-options"></th>
                             <th class="sortable" value="title">
                                 <div>
                                     <p>Title</p>
@@ -105,7 +106,7 @@
                     <tbody></tbody>
                 </table>
             </div>
-            <div class="credits">
+            <div id="credits">
                 <p>
                     Design and code by
                     <a href="https://github.com/ccardonaguillen">
@@ -118,6 +119,22 @@
                 </p>
             </div>
         </main>
+        <div id="options-modal" class="hidden">
+            <ul>
+                <li>
+                    <div id="edit-album">
+                        <img src="../images/book-edit-outline.svg" alt="Edit">
+                        <p>Edit Album</p>
+                    </div>
+                </li>
+                <li>
+                    <div id="delete-album">
+                        <img src="../images/file-document-remove-outline.svg" alt="Delete">
+                        <p>Delete Album</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
         <div class="modal-overlay hidden">
             <div class="modal">
                 <h2>New Album</h2>
@@ -210,7 +227,7 @@
                                     </div>
                                 </div>
                                 <div>
-                                    <label for="owned">Mark as favorite?</label>
+                                    <label for="favorite">Mark as favorite?</label>
                                     <div class="radio-container">
                                         <div>
                                             <input
@@ -257,7 +274,7 @@
                                 </div>
                             </div>
                             <div>
-                                <label for="new-wikipedia">Wikpedia Article</label>
+                                <label for="new-wikipedia">Wikipedia Article</label>
                                 <input
                                     type="url"
                                     name="wikipedia"
