@@ -1,6 +1,6 @@
-## TO do
-- Iconos "owned" y "favorite" clicables para cambiar status en vez de editar formulario
-- Añadir boton opciones con funciones de borrar y editar
+## TO DO
+- Retocar anchura de columnas "owned" y "favorite"
+- Adapt design for mobiles
 
 ## POSSIBLE FUTURE ADDITIONS
 - Añadir datos basicos disco desde Discogs (u otra pagina?) pasando el link
@@ -16,3 +16,5 @@ poder especificar posicion
 	2. Crear/modificar funcion para actualizar contenido de la fila --> preferible esta opcion para usarla con iconos clicables
 
 - Cambiar modo de editar con formulario utilizando funcion "editAlbumDetails" en vez de "addAlbum"
+
+- Añadir clases a las diferentes columnas para facilitar la seleccion en CSS
