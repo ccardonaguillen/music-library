@@ -2,7 +2,7 @@ import events from "./events.js";
 import musicLibrary from "./library.js";
 import { filterController } from "./filter.js";
 
-const lang = window.navigator.language
+const lang = window.navigator.language.slice(0, 2);
 
 var tableView = (function () {
     const contents = document.querySelector("table > tbody");

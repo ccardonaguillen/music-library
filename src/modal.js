@@ -2,7 +2,7 @@ import events from "./events.js";
 import Album from "./album.js";
 import musicLibrary from "./library.js";
 
-const lang = window.navigator.language;
+const lang = window.navigator.language.slice(0, 2);
 
 var modalController = (function () {
     const overlay = document.querySelector(".modal-overlay"), 

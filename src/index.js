@@ -14,3 +14,5 @@ for (const key in sample) {
         musicLibrary.addAlbum(newAlbum);
     }
 }
+
+console.log(window.navigator.language.slice(0, 2))

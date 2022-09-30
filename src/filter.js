@@ -1,7 +1,7 @@
 import events from "./events.js";
 import musicLibrary from "./library.js";
 
-const lang = window.navigator.language;
+const lang = window.navigator.language.slice(0, 2);
 
 var summaryView = (function () {
     const summary = document.getElementById("entries-count"),
