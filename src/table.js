@@ -34,7 +34,7 @@ var tableView = (function () {
 
     function _removeRow(id) {
         // Ask confirmation before removing album
-        confirmDelete = lang === "es" ?
+        const confirmDelete = lang === "es" ?
                         "¿Estás seguro de que quiere borrar este álbum?" :
                         "Are you sure you want to delete this album?"
         if (!confirm(confirmDelete)) return;
@@ -446,12 +446,10 @@ var optionsModal = (function(album) {
 
         editAlbum.addEventListener("click", () => {
             events.emit("editAlbum", album);
-            console.log("edit")
         })
 
         delAlbum.addEventListener("click", () => {
             events.emit("removeRow", album.id);
-            console.log("remove")
         })
     }
 
