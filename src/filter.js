@@ -1,6 +1,8 @@
 import events from "./events.js";
 import musicLibrary from "./library.js";
 
+const lang = window.navigator.language;
+
 var summaryView = (function () {
     const summary = document.getElementById("entries-count"),
         tableContents = document.querySelector("table > tbody");
@@ -14,10 +16,17 @@ var summaryView = (function () {
             shownEntries = tableContents.querySelectorAll("tr:not(.extra-info)").length; // Number of rows in table
 
         // If there are no albums in the library print welcome message
-        summary.textContent =
+        if (lang === "es") {
+            summary.textContent =
+            totalEntries === 0
+                ? "No hay ningún álbum en la colección. Añade uno usando el botón"
+                : `Mostrando ${shownEntries} de ${totalEntries} álbums`;
+        } else {
+            summary.textContent =
             totalEntries === 0
                 ? "No albums in the library. Add one by clicking the button"
                 : `Showing ${shownEntries} out of ${totalEntries} albums`;
+        }
     }
 })();
 
@@ -51,15 +60,16 @@ var filterController = (function () {
     function _renderPlaceholder() {
         /* Update placeholder message according to the selected option */
         const filter = filterSelect.value;
+        const prefix = lang === "es" ? "p. ej. " : "e.g. ";
         const placeholder = {
-            title: 'e.g. "submarine"',
-            artist: 'e.g. "zeppelin", "beatles, rolling"',
-            release_year: 'e.g. "1990", "1-2000", ">1900", "<1980"',
-            owned: 'e.g. "true", "no", "not owned"',
-            format: 'e.g. "Vynil", "cd+casette", "vynil/CD"'
+            title: '"submarine"',
+            artist: '"zeppelin", "beatles, rolling"',
+            release_year: '"1990", "1-2000", ">1900", "<1980"',
+            owned: '"true", "no", "not owned"',
+            format: '"Vynil", "cd+casette", "vynil/CD"'
         };
 
-        filterValue.placeholder = placeholder[filter];
+        filterValue.placeholder = prefix + placeholder[filter];
     }
 
     function _resetFilter(e) {

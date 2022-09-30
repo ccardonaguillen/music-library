@@ -2,6 +2,8 @@ import events from "./events.js";
 import Album from "./album.js";
 import musicLibrary from "./library.js";
 
+const lang = window.navigator.language;
+
 var modalController = (function () {
     const overlay = document.querySelector(".modal-overlay"), 
         openButton = document.getElementById("open-modal"),
@@ -13,7 +15,7 @@ var modalController = (function () {
     openButton.addEventListener("click", () => _open("new"));
     closeButton.addEventListener("click", close);
 
-    events.on("editButtonClicked", album => _open("edit", album));
+    events.on("editAlbum", album => _open("edit", album));
 
     function _open(mode, album) {
         /* Display form modal over main window and focus on first input */
@@ -23,13 +25,13 @@ var modalController = (function () {
         if (mode==="new") {
             modal.setAttribute("data-mode", "new"); 
             modal.setAttribute("data-album-id", ""); 
-            header.textContent = "New Album";
+            header.textContent = lang === "es" ? "Añadir Álbum" : "New Album";
             resetButton.textContent = "Reset";
         }  else if (mode==="edit") {
             modal.setAttribute("data-mode", "edit"); 
             modal.setAttribute("data-album-id", album.id); 
-            header.textContent = "Edit Album";
-            resetButton.textContent = "Cancel";
+            header.textContent = lang === "es" ? "Editar Álbum" : "Edit Album";
+            resetButton.textContent = lang === "es" ? "Cancelar" : "Cancel";
             _populateForm(album);
         }
     }

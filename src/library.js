@@ -53,6 +53,10 @@ var musicLibrary = (function () {
         events.emit("albumEdited");
     }
 
+    function getAlbum(id) {
+        return albumList.filter((album) => id === album.id);
+    }
+
     function sort({ by, ord = "asc" }) {
         /* Reverse sorting algorithm is ord = 'desc'; */
         let sortOrder = ord === "asc" ? 1 : -1;
@@ -77,6 +81,7 @@ var musicLibrary = (function () {
         deleteAlbum,
         editAlbum,
         editAlbumDetails,
+        getAlbum,
         sort
     }
 })();

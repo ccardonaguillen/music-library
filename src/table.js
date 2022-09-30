@@ -2,6 +2,8 @@ import events from "./events.js";
 import musicLibrary from "./library.js";
 import { filterController } from "./filter.js";
 
+const lang = window.navigator.language
+
 var tableView = (function () {
     const contents = document.querySelector("table > tbody");
 
@@ -9,6 +11,7 @@ var tableView = (function () {
     events.on("albumEdited", _update);
     events.on("librarySorted", _update);
     events.on("filterApplied", _update);
+    events.on("removeRow", _removeRow);
 
     function _update() {
         _clear();
@@ -29,6 +32,21 @@ var tableView = (function () {
         }
     }
 
+    function _removeRow(id) {
+        // Ask confirmation before removing album
+        confirmDelete = lang === "es" ?
+                        "¿Estás seguro de que quiere borrar este álbum?" :
+                        "Are you sure you want to delete this album?"
+        if (!confirm(confirmDelete)) return;
+    
+        // Remove row and album from library
+        const row = document.querySelector(`tr[data-id=${id}]`)
+        
+        contents.removeChild(row);
+        musicLibrary.deleteAlbum(id);
+        _collapseExtraInfo();
+    }
+
     function _renderAlbum(album) {
         // Apply filter. If false do not render
         if (!tableController.filterAlbum(album)) return;
@@ -38,6 +56,14 @@ var tableView = (function () {
         // Set album attribute as unique identifier for the row
         row.classList.add("album-row");
         row.setAttribute("data-id", album.id);
+
+        // Add album options icon (three dots)
+        const optionsButton = _appendOptionsButton(row);
+        row.append(optionsButton);
+        optionsButton.addEventListener("click", (e) => {
+            e.stopImmediatePropagation();
+            optionsModal.open(e.x, e.y, album);
+        })
 
         // Add album info
         const columns = ["title", "artist", "release_year", "owned", "favorite"];
@@ -77,24 +103,20 @@ var tableView = (function () {
             }
             row.appendChild(dataCell);
         }
-    
-        // Create remove-album button
-        // const removeButton = _renderRemoveButton(row);
-        // row.appendChild(removeButton);
-    
+
         // Append new row
         contents.appendChild(row);
 
         row.addEventListener("click", () => {
             const nextRow = row.nextSibling;
 
-            _collapseExtraInfo(); // Close any opened extra-info panels
+            _collapseExtraInfo(); 
+            // Close any opened extra-info panels
             // If the row had an extra-info panel then
             // do nothing (effectively closing it)
             if (nextRow && nextRow.classList.contains("extra-info")) return;
             _renderExtraInfo(album, row);
         });
-
 
         events.emit("rowAdded");
     }
@@ -139,17 +161,13 @@ var tableView = (function () {
 
         // Insert after
         row.parentElement.insertBefore(extraInfo, row.nextSibling);
-
-        dataCell.addEventListener("click", () => {
-            events.emit("editButtonClicked", album);
-        })
     }
 
     function _renderGeneralInfo(container, album) {
         const fields = [
             {
                 key: "genre",
-                label: "Genre",
+                label: lang === "es" ? "Género" : "Genre",
                 icon: "",
             },
             {
@@ -199,37 +217,37 @@ var tableView = (function () {
         const fields = [
             {
                 key: "catalog_num",
-                label: "Catalog#",
+                label: lang === "es" ? "Nº Catálogo" : "Catalog #",
                 icon: "",
             },
             {
                 key: "record_label",
-                label: "Label",
+                label: lang === "es" ? "Sello" : "Label",
                 icon: "",
             },
             {
                 key: "country",
-                label: "Country",
+                label: lang === "es" ? "País" : "Country",
                 icon: "",
             },
             {
                 key: "edition_year",
-                label: "Edition",
+                label: lang === "es" ? "Año Edición" : "Edition",
                 icon: "",
             },
             {
                 key: "matrix",
-                label: "Matrix",
+                label: lang === "es" ? "Matriz" : "Matrix",
                 icon: "",
             },
             {
                 key: "condition",
-                label: "Condition",
+                label: lang === "es" ? "Estado" : "Condition",
                 icon: "",
             },
             {
                 key: "notes",
-                label: "Notes",
+                label: lang === "es" ? "Obs." : "Notes",
                 icon: "",
             }
         ];
@@ -246,33 +264,31 @@ var tableView = (function () {
         })
     }
 
-    function _renderRemoveButton(row) {
+    function _appendOptionsButton(row) {
         // Create trashcan button and append it to row
         const dataCell = document.createElement("td");
-        const removeButton = document.createElement("button");
+        const button = document.createElement("img");
 
-        removeButton.classList.add("remove-album", "img-button", "hidden");
-        removeButton.title = "Delete Album";
+        dataCell.classList.add("album-options");
 
-        dataCell.appendChild(removeButton);
+        button.setAttribute("src", "../images/dots-vertical.svg")
+        button.classList.add("cell-icon")
+        button.title = lang === "es" ?
+                        "Opciones" :
+                        "Album Options";
+        button.style.visibility = "hidden";
+
+        dataCell.appendChild(button);
 
         // Connect new row so that remove-icon only appears on hover
         row.addEventListener("mouseenter", function () {
-            removeButton.classList.remove("hidden");
+            button.style.visibility = "visible";
         });
         row.addEventListener("mouseleave", function () {
-            removeButton.classList.add("hidden");
+            button.style.visibility = "hidden";
         });
 
-        // Connect button to removeAlbum function
-        removeButton.addEventListener("click", function (){
-            const id = row.getAttribute("data-id");
-            musicLibrary.deleteAlbum(id);
-
-            events.emit("rowDeleted");
-        });
-
-        return dataCell
+        return dataCell;
     }
 })();
 
@@ -284,18 +300,6 @@ var tableController = (function () {
     sortableHeaders.forEach((header) => {
         header.addEventListener("click", _sortTable);
     });
-
-    events.on("albumDeleted", _removeRow);
-
-    function _removeRow(id) {
-        // Ask confirmation before removing album
-        if (!confirm("Are you sure you want to delete this album?")) return;
-    
-        // Remove row and album from library
-        const row = document.querySelector(`tr[data-id=${id}]`)
-        
-        contents.removeChild(row);
-    }
 
     function _sortTable(e) {
         const header = e.currentTarget;
@@ -385,20 +389,16 @@ var tableController = (function () {
     
             case "owned":
                 // Allow the use of different words for true and false
-                switch (filterValue.toLowerCase()) {
-                    case "yes":
-                    case "true":
-                    case "owned":
-                    case "1":
-                        return album["owned"];
-                    case "no":
-                    case "false":
-                    case "not owned":
-                    case "want":
-                    case "0":
-                        return !album["owned"];
-                    default:
-                        return true;
+                if (filterValue.toLowerCase() in [
+                    "1", "yes", "true", "own", "sí", "si", "adq", "adquirido"
+                ]) {
+                    return album["owned"];
+                } else if (filterValue.toLowerCase() in [
+                    "0", "no", "not", "false", "!owned", "want", "!adq", "!adquirido"
+                ]) {
+                    return !album["owned"];
+                } else {
+                    return true;
                 }
             case "format":
                 // In this filter "+" = "and" and "[,;/]" = "or"
@@ -428,5 +428,49 @@ var tableController = (function () {
 
     return {
         filterAlbum
+    }
+})();
+
+
+var optionsModal = (function(album) {
+    const modal = document.getElementById("options-modal");
+
+    modal.addEventListener("mouseleave", close)
+
+    function open(x, y, album) {
+        const editAlbum = document.getElementById("edit-album"),
+            delAlbum = document.getElementById("delete-album");
+
+        _render(x, y)
+        modal.classList.remove("hidden");
+
+        editAlbum.addEventListener("click", () => {
+            events.emit("editAlbum", album);
+            console.log("edit")
+        })
+
+        delAlbum.addEventListener("click", () => {
+            events.emit("removeRow", album.id);
+            console.log("remove")
+        })
+    }
+
+    function close() {
+        const editAlbum = document.getElementById("edit-album"),
+            delAlbum = document.getElementById("delete-album");
+
+        editAlbum.replaceWith(editAlbum.cloneNode(true));
+        delAlbum.replaceWith(delAlbum.cloneNode(true));
+        modal.classList.add("hidden");
+        
+    }
+
+    function _render(x, y) {
+        modal.style.left = x - 5 + "px";
+        modal.style.top = y - 5 + "px";
+    }
+
+    return {
+        open
     }
 })();
