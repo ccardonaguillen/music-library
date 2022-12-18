@@ -1,18 +1,11 @@
-import "./table.js"
-import "./filter.js"
-import "./modal.js"
-import "./loader.js"
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
 
-import musicLibrary from "./library.js";
-import Album from "./album.js";
-
-var sample = require("../album_sample.json")
-
-for (const key in sample) {
-    if (Object.hasOwnProperty.call(sample, key)) {
-        var newAlbum = Album(sample[key]);
-        musicLibrary.addAlbum(newAlbum);
-    }
-}
-
-console.log(window.navigator.language.slice(0, 2))
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+    <React.StrictMode>
+        <App />
+    </React.StrictMode>
+);
