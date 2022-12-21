@@ -28,4 +28,4 @@ Library to register all records (CD, Vynil or other formats) that the user owns 
 
 -   Añadir clases a las diferentes columnas para facilitar la seleccion en CSS
 
--   Generalizar sugerencias y añadir a otros campos (Páis, sello, etc.)
+-   Generalizar sugerencias y añadir a otros campos (País, sello, etc.)

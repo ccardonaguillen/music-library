@@ -1,0 +1,43 @@
+header {
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    background-color: var(--secondary-color);
+    width: 100%;
+    box-shadow: 0px 3px 10px var(--shadow-light);
+}
+
+header .container {
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    width: var(--max-width)
+}
+
+header a {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+}
+
+header svg {
+    color: black;
+    filter: drop-shadow(1px 1px 1px var(--shadow-dark));
+
+}
+
+#hero-logo,
+#github-hero {
+    height: 4.5rem;
+}
+
+
+header h1 {
+    margin: 0;
+    padding: 0;
+    font-size: 4.5rem;
+    font-weight: 600;
+    color: var(--text-main-color);
+    text-shadow: 1px 1px 2px var(--shadow-dark);
+}

@@ -1,0 +1,210 @@
+.modal-overlay {
+    z-index: 10;
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    height: 100%;
+    width: 100%;
+}
+
+.modal {
+    box-sizing: content-box;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%) scale(1);
+    width: 45rem;
+    max-height: 80vh;
+    padding: 3rem 3.5rem;
+    border-radius: 10px;
+    background-color: var(--main-color);
+    font-size: 1.4rem;
+    overflow: hidden;
+}
+
+.modal h2 {
+    margin: 0 0 1.5rem;
+    font-size: 2.6rem;
+}
+
+#close-modal {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 30px;
+    height: 30px;
+    padding: 0;
+}
+
+.form-content {
+    box-sizing: border-box;
+    max-height: 65vh;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.form-content::-webkit-scrollbar {
+    display: none;
+}
+
+fieldset {
+    padding: 15px 20px 25px;
+}
+
+fieldset:nth-of-type(n+2) {
+    margin-top: 20px;
+}
+
+fieldset>legend {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: rgb(120, 120, 120);
+}
+
+.modal label,
+.modal p {
+    font-weight: 500;
+    font-size: 1.4rem;
+}
+
+.modal fieldset>div:not(:first-of-type) {
+    margin-top: 1.4rem;
+}
+
+.modal input[type="text"],
+.modal input[type="number"],
+.modal input[type="url"],
+.modal select {
+    /* -moz-appearance: textfield; */
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    margin-top: 3px;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 6px;
+    box-shadow: 1px 2px 2px var(--shadow-light) inset;
+    font-family: var(--default-font-family);
+    font-size: 1.3rem;
+    background-color: var(--text-accent-color);
+}
+
+.modal input[type="text"]:focus,
+.modal input[type="number"]:focus {
+    outline: 3px solid black;
+}
+
+.modal input[type="radio"],
+.modal input[type="checkbox"] {
+    accent-color: var(--accent-color);
+    transform: scale(1.15);
+}
+
+.modal input[type="radio"]+label,
+.modal input[type="checkbox"]+label {
+    font-weight: 400;
+    font-size: 1.3rem;
+}
+
+.modal input[type="radio"] {
+    margin-bottom: 0.3rem;
+}
+
+.modal input[type="checkbox"] {
+    margin-top: 0.15rem;
+}
+
+.option-box-container {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.input-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-items: center;
+    gap: 20px;
+}
+
+.radio-container {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 2.5rem;
+    margin-left: -0.8rem;
+}
+
+.album-format-container {
+    display: flex;
+    justify-content: space-between;
+    padding-right: 1rem;
+}
+
+.checkbox-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 0.6rem;
+    accent-color: var(--accent-color);
+}
+
+.modal input:disabled+label {
+    color: lightgrey;
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.modal .button-container {
+    margin-top: 3rem;
+}
+
+.modal button {
+    padding: 0.6rem 0rem;
+    font-weight: 600;
+    font-size: 1.5rem;
+}
+
+.modal input[type="number"]::-webkit-outer-spin-button,
+.modal input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+
+.suggestions {
+    z-index: 11;
+    box-sizing: border-box;
+    position: absolute;
+    max-height: 200px;
+    width: 40rem;
+    background-color: white;
+    padding: 0.5rem 0rem;
+    margin-top: -0.2rem;
+    margin-left: 0.1rem;
+    border-radius: 0 0 6px 6px;
+    border: 1px solid var(--shadow-light);
+    border-top: none;
+    overflow: auto;
+
+}
+
+.suggestions ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.suggestions li {
+    padding: 0.5rem 1.5rem;
+}
+
+.suggestions li:hover {
+    background-color: var(--main-color);
+}

@@ -1,0 +1,15 @@
+#App {
+    display: grid;
+    grid-template-rows: 120px 1fr min-content;
+    min-height: 100vh;
+}
+
+main {
+
+    background-color: var(--main-color);
+}
+
+main .container {
+    width: var(--max-width);
+    margin: 50px auto;
+}
