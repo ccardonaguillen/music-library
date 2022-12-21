@@ -63,6 +63,7 @@ function Table(props) {
     }
 
     function handleChangeSorting(by) {
+        collapseExtraInfo();
         setSorting((prevSorting) => ({ by, order: prevSorting.order === 'asc' ? 'desc' : 'asc' }));
     }
 
@@ -134,12 +135,20 @@ function AlbumRow(props) {
 
     const [optionsVisibility, setOptionsVisibility] = useState('hidden');
 
-    function handleToggleOwned() {
+    function handleToggleOwned(event) {
+        event.stopPropagation();
         onToggleProp({ id: album.id, info: { owned: album.owned ? false : true } });
     }
 
-    function handleToggleFav() {
+    function handleToggleFav(event) {
+        event.stopPropagation();
         onToggleProp({ id: album.id, info: { favorite: album.favorite ? false : true } });
+    }
+
+    function handleOpenOptionsModal(event) {
+        event.stopPropagation();
+        console.log(event);
+        onOptionsModalOpened({ event, album });
     }
 
     return (
@@ -153,7 +162,7 @@ function AlbumRow(props) {
                     <FontAwesomeIcon
                         icon="ellipsis-vertical"
                         className="album-options clickable"
-                        onClick={(event) => onOptionsModalOpened({ event, album })}
+                        onClick={handleOpenOptionsModal}
                         style={{ visibility: optionsVisibility }}
                     />
                 </td>

@@ -17,6 +17,12 @@ package-lock.json
 # production
 /build
 
+# old version
+/src/components/old
+/src/styles/old
+/src/assets/images
+
+
 # misc
 .DS_Store
 .env.local
