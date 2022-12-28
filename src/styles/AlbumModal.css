@@ -187,7 +187,6 @@ fieldset>legend {
 .suggestions {
     z-index: 11;
     box-sizing: border-box;
-    position: absolute;
     max-height: 200px;
     width: 40rem;
     background-color: white;
@@ -209,6 +208,7 @@ fieldset>legend {
 
 .suggestions li {
     padding: 0.5rem 1.5rem;
+    cursor: pointer;
 }
 
 .suggestions li:hover {

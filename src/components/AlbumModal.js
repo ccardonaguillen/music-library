@@ -343,10 +343,28 @@ function InputField(props) {
 function InputFieldWithSuggestions(props) {
     const { id, type, label, placeholder, library } = props;
     const [value, setValue] = useState('');
+    const [displaySuggs, setDisplaySuggs] = useState(false);
 
     function handleInputChange(e) {
         const newValue = e.target.value;
         setValue(newValue);
+        setDisplaySuggs(true);
+    }
+
+    function handleClickSuggestion(e) {
+        console.log('click');
+        e.preventDefault();
+        const newValue = e.currentTarget.textContent;
+        setValue(newValue);
+        setDisplaySuggs(false);
+    }
+
+    function handleFocusLost() {
+        setDisplaySuggs(false);
+    }
+
+    function handleFocusAdq() {
+        setDisplaySuggs(true);
     }
 
     return (
@@ -355,17 +373,25 @@ function InputFieldWithSuggestions(props) {
             <input
                 type={type}
                 name={id}
+                value={value}
                 id={id}
                 placeholder={placeholder}
                 onChange={handleInputChange}
+                onBlur={handleFocusLost}
+                onFocus={handleFocusAdq}
             />
-            <InputSuggestions input={value} suggestions={library.map((album) => album[id])} />
+            <InputSuggestions
+                show={displaySuggs}
+                input={value}
+                suggestions={library.map((album) => album[id])}
+                onSuggestionClicked={handleClickSuggestion}
+            />
         </div>
     );
 }
 
 function InputSuggestions(props) {
-    const { suggestions, input } = props;
+    const { show, input, suggestions, onSuggestionClicked } = props;
     const filteredSuggs = filterSuggestions(suggestions);
     const regex = new RegExp(`(.*)(${input})(.*)`, 'i');
     const isEmpty = input === '' || filteredSuggs.length === 0;
@@ -381,7 +407,7 @@ function InputSuggestions(props) {
         }, []);
     }
 
-    if (isEmpty) return null;
+    if (!show || isEmpty) return null;
 
     return (
         <div className="suggestions">
@@ -390,7 +416,7 @@ function InputSuggestions(props) {
                     const match = sugg.match(regex);
 
                     return (
-                        <li key={sugg}>
+                        <li key={sugg} onMouseDown={onSuggestionClicked}>
                             {match[1]}
                             <strong>{match[2]}</strong>
                             {match[3]}

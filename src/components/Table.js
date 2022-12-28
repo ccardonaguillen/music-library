@@ -136,20 +136,20 @@ function AlbumRow(props) {
 
     const [optionsVisibility, setOptionsVisibility] = useState('hidden');
 
-    function handleToggleOwned(event) {
-        event.stopPropagation();
+    function handleToggleOwned(e) {
+        e.stopPropagation();
         onToggleProp({ id: album.id, info: { owned: album.owned ? false : true } });
     }
 
-    function handleToggleFav(event) {
-        event.stopPropagation();
+    function handleToggleFav(e) {
+        e.stopPropagation();
         onToggleProp({ id: album.id, info: { favorite: album.favorite ? false : true } });
     }
 
-    function handleOpenOptionsModal(event) {
-        event.stopPropagation();
-        console.log(event);
-        onOptionsModalOpened({ event, album });
+    function handleOpenOptionsModal(e) {
+        e.stopPropagation();
+        console.log(e);
+        onOptionsModalOpened({ event: e, album });
     }
 
     return (
