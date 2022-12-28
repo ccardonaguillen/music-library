@@ -1,4 +1,5 @@
 import React, { useEffect, useReducer, useState } from 'react';
+import { query, collection, getFirestore, onSnapshot } from 'firebase/firestore';
 import { library as fontLibrary } from '@fortawesome/fontawesome-svg-core';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -15,115 +16,15 @@ import AlbumModal from './AlbumModal';
 import OptionsModal from './OptionsModal';
 import Album from './Album';
 
+import { libraryReducer } from './utils/reducer';
+import { filterAlbum } from './utils/libraryFilter';
+import { findAlbum, addAlbum, deleteAlbum, updateAlbum } from './utils/firebaseDatabase';
+
 fontLibrary.add(faPlus);
-
-function libraryReducer(library, action) {
-    const { type, id, info } = action;
-
-    switch (type) {
-        case 'added':
-            const newAlbum = Album(info);
-            if (library.every((album) => newAlbum.id !== album.id)) {
-                return [newAlbum, ...library];
-            } else {
-                // If the album exist log error message
-                // alert('This album already exists.');
-                console.log('Repeated ID: ' + id);
-
-                return library;
-            }
-
-        case 'deleted':
-            return library.filter((album) => album.id !== id);
-
-        case 'edited':
-            return library.map((album) => (id === album.id ? { ...album, ...info } : album));
-
-        default:
-            return library;
-    }
-}
-
-function filterAlbum(album, filter) {
-    const { by, value } = filter;
-    switch (by) {
-        case 'title':
-            return album['title'].toLowerCase().includes(value.toLowerCase());
-        case 'artist':
-            // Match any of the comma separated matches
-            const artistList = value.split(/\s*[,;]\s*/);
-            return artistList.some((artist) =>
-                album['artist'].toLowerCase().includes(artist.toLowerCase())
-            );
-        case 'release_year':
-            let match = (regex) => value.match(regex);
-            // Regex for year for different release year filter
-            const regexEq = /^\s*(\d+)\s*$/, // Single year value
-                regexGt = /(?:^>\s?(\d+)$)/, // Greater than
-                regexLt = /(?:^<\s?(\d+)$)/, // Lower than
-                regexBtw = /(?:^(\d+)\s?[-,/;]\s?(\d+)$)/; //Two values interval
-
-            if (match(regexEq)) {
-                return album['release_year'] === match(regexEq)[1];
-            } else if (match(regexGt)) {
-                return album['release_year'] >= match(regexGt)[1];
-            } else if (match(regexLt)) {
-                return album['release_year'] <= match(regexLt)[1];
-            } else if (match(regexBtw)) {
-                return (
-                    album['release_year'] >= match(regexBtw)[1] &&
-                    album['release_year'] <= match(regexBtw)[2]
-                );
-            } else {
-                return false;
-            }
-
-        case 'owned':
-            // Allow the use of different words for true and false
-            if (
-                value.toLowerCase() in ['1', 'yes', 'true', 'own', 'sí', 'si', 'adq', 'adquirido']
-            ) {
-                return album['owned'];
-            } else if (
-                value.toLowerCase() in
-                ['0', 'no', 'not', 'false', '!owned', 'want', '!adq', '!adquirido']
-            ) {
-                return !album['owned'];
-            } else {
-                return true;
-            }
-        case 'format':
-            // In this filter "+" = "and" and "[,;/]" = "or"
-            let formatList = [];
-            if (value.includes('+')) {
-                formatList = value.split(/\s*\+\s*/);
-                return formatList.every(
-                    (format) =>
-                        album['format'].findIndex(
-                            (val) => val.toLowerCase() === format.toLowerCase()
-                        ) !== -1
-                );
-            } else {
-                formatList = value.split(/\s*[,;/]\s*/);
-                return formatList.some(
-                    (format) =>
-                        album['format'].findIndex(
-                            (val) => val.toLowerCase() === format.toLowerCase()
-                        ) !== -1
-                );
-            }
-        default:
-            // Else do nothing
-            return true;
-    }
-}
 
 const App = () => {
     const [filter, setFilter] = useState({ by: '', value: '' });
-    const [library, updateLibrary] = useReducer(
-        libraryReducer,
-        Object.values(sample).map((album) => Album(album))
-    );
+    const [library, updateLibrary] = useReducer(libraryReducer, []);
     const [libraryDisplay, setLibraryDisplay] = useState([]);
     const [showAlbumModal, setShowAlbumModal] = useState(false);
     const [albumModalMode, setAlbumModalMode] = useState({ name: 'new' });
@@ -132,22 +33,59 @@ const App = () => {
     const [optionsModalAlbum, setOptionsModalAlbum] = useState('');
 
     useEffect(() => {
+        listenLibrary();
+    }, []);
+
+    useEffect(() => {
         setLibraryDisplay(
             filter.value === '' ? library : library.filter((album) => filterAlbum(album, filter))
         );
     }, [library, filter]);
 
-    function handleAddAlbum(info) {
-        updateLibrary({ type: 'added', info });
+    async function listenLibrary() {
+        updateLibrary({ type: 'reset' });
+        const q = query(collection(getFirestore(), 'library'));
+
+        onSnapshot(q, (snapshot) => {
+            snapshot.docChanges().forEach((change) => {
+                switch (change.type) {
+                    case 'added':
+                        updateLibrary({
+                            type: 'added',
+                            info: { ...change.doc.data(), id: change.doc.id },
+                        });
+                        break;
+                    case 'modified':
+                        updateLibrary({
+                            type: 'edited',
+                            id: change.doc.id,
+                            info: change.doc.data(),
+                        });
+                        break;
+                    case 'removed':
+                        updateLibrary({ type: 'removed', id: change.doc.id });
+                        break;
+                    default:
+                        break;
+                }
+            });
+        });
+    }
+
+    async function handleAddAlbum(info) {
+        const match = await findAlbum(info);
+        const isInLibrary = match.length > 0;
+
+        if (!isInLibrary) addAlbum(info);
     }
 
     function handleDeleteAlbum(id) {
-        updateLibrary({ type: 'deleted', id });
+        deleteAlbum(id);
         setShowOptionsModal(false);
     }
 
     function handleEditAlbum({ id, info }) {
-        updateLibrary({ type: 'edited', id, info });
+        updateAlbum(id, info);
     }
 
     function handleChangeFilter(newFilter) {

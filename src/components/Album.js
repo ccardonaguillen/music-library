@@ -1,4 +1,5 @@
 let Album = ({
+    id,
     title,
     artist,
     release_year,
@@ -21,10 +22,11 @@ let Album = ({
     jacket,
 }) => {
     return {
-        id:
-            title.toLowerCase().replaceAll(/\W/g, '') +
-            artist.toLowerCase().replaceAll(/\W/g, '') +
-            release_year,
+        // id:
+        //     title.toLowerCase().replaceAll(/\W/g, '') +
+        //     artist.toLowerCase().replaceAll(/\W/g, '') +
+        //     release_year,
+        id,
         title,
         artist,
         release_year,

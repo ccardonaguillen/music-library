@@ -27,12 +27,6 @@ header svg {
 
 }
 
-#hero-logo,
-#github-hero {
-    height: 4.5rem;
-}
-
-
 header h1 {
     margin: 0;
     padding: 0;
@@ -40,4 +34,22 @@ header h1 {
     font-weight: 600;
     color: var(--text-main-color);
     text-shadow: 1px 1px 2px var(--shadow-dark);
+}
+
+#hero-logo,
+#github-hero,
+#user-avatar {
+    height: 4.5rem;
+}
+
+#nav-user {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 1.6rem;
+    font-weight: 600;
+}
+
+#nav-user>p {
+    cursor: pointer;
 }

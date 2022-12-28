@@ -3,12 +3,14 @@ import { library as fontLibrary } from '@fortawesome/fontawesome-svg-core';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
+
 import '../styles/AlbumModal.css';
 
 fontLibrary.add(faXmark);
 
 function AlbumModal(props) {
-    const { mode, show, library, onModalClosed, onAlbumAdded, onEdited } = props;
+    const { mode, show, library, onModalClosed, onAlbumAdded, onAlbumEdited } = props;
     const modalTitle = mode.name === 'new' ? 'New Album' : 'Edit Album';
     const resetButtonLabel = mode.name === 'new' ? 'Reset' : 'Cancel';
 
@@ -77,12 +79,12 @@ function AlbumModal(props) {
         setShowRecordInfo(album.owned);
     }
 
-    function submitNewAlbum(e) {
+    async function submitNewAlbum(e) {
         e.preventDefault();
 
         const info = parseAlbumForm();
-        console.log(info);
-        mode.name === 'new' ? onAlbumAdded(info) : onEdited({ id: mode.album.id, info });
+        // console.log(info);
+        mode.name === 'new' ? onAlbumAdded(info) : onAlbumEdited({ id: mode.album.id, info });
 
         onModalClosed();
     }
