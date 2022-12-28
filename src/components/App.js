@@ -1,11 +1,10 @@
 import React, { useEffect, useReducer, useState } from 'react';
-import { query, collection, getFirestore, onSnapshot } from 'firebase/firestore';
 import { library as fontLibrary } from '@fortawesome/fontawesome-svg-core';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import '../styles/App.css';
-import sample from '../assets/album_sample.json';
+// import sample from '../assets/album_sample.json';
 
 import Credits from './Credits';
 import Filter from './Filter';
@@ -14,11 +13,16 @@ import Summary from './Summary';
 import Table from './Table';
 import AlbumModal from './AlbumModal';
 import OptionsModal from './OptionsModal';
-import Album from './Album';
 
-import { libraryReducer } from './utils/reducer';
+import libraryReducer from './utils/reducer';
 import { filterAlbum } from './utils/libraryFilter';
-import { findAlbum, addAlbum, deleteAlbum, updateAlbum } from './utils/firebaseDatabase';
+import {
+    loadLibrary,
+    findAlbum,
+    addAlbum,
+    deleteAlbum,
+    updateAlbum,
+} from './utils/firebaseDatabase';
 
 fontLibrary.add(faPlus);
 
@@ -33,7 +37,7 @@ const App = () => {
     const [optionsModalAlbum, setOptionsModalAlbum] = useState('');
 
     useEffect(() => {
-        listenLibrary();
+        loadLibrary(updateLibrary);
     }, []);
 
     useEffect(() => {
@@ -41,36 +45,6 @@ const App = () => {
             filter.value === '' ? library : library.filter((album) => filterAlbum(album, filter))
         );
     }, [library, filter]);
-
-    async function listenLibrary() {
-        updateLibrary({ type: 'reset' });
-        const q = query(collection(getFirestore(), 'library'));
-
-        onSnapshot(q, (snapshot) => {
-            snapshot.docChanges().forEach((change) => {
-                switch (change.type) {
-                    case 'added':
-                        updateLibrary({
-                            type: 'added',
-                            info: { ...change.doc.data(), id: change.doc.id },
-                        });
-                        break;
-                    case 'modified':
-                        updateLibrary({
-                            type: 'edited',
-                            id: change.doc.id,
-                            info: change.doc.data(),
-                        });
-                        break;
-                    case 'removed':
-                        updateLibrary({ type: 'removed', id: change.doc.id });
-                        break;
-                    default:
-                        break;
-                }
-            });
-        });
-    }
 
     async function handleAddAlbum(info) {
         const match = await findAlbum(info);

@@ -3,8 +3,6 @@ import { library as fontLibrary } from '@fortawesome/fontawesome-svg-core';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { getFirestore, collection, addDoc, serverTimestamp } from 'firebase/firestore';
-
 import '../styles/AlbumModal.css';
 
 fontLibrary.add(faXmark);

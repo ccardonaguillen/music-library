@@ -1,14 +1,29 @@
 import {
+    getFirestore,
     collection,
     doc,
     query,
-    getFirestore,
+    onSnapshot,
     addDoc,
     deleteDoc,
     getDocs,
     where,
     updateDoc,
 } from 'firebase/firestore';
+
+async function loadLibrary(dispatch) {
+    dispatch({ type: 'reset', payload: {} });
+    const q = query(collection(getFirestore(), 'library'));
+
+    onSnapshot(q, (snapshot) => {
+        snapshot.docChanges().forEach((change) => {
+            dispatch({
+                type: change.type,
+                payload: { id: change.doc.id, info: change.doc.data() },
+            });
+        });
+    });
+}
 
 async function findAlbum(info) {
     const libraryRef = collection(getFirestore(), 'library');
@@ -41,4 +56,4 @@ async function updateAlbum(id, info) {
     await updateDoc(albumRef, info);
 }
 
-export { findAlbum, addAlbum, deleteAlbum, updateAlbum };
+export { loadLibrary, findAlbum, addAlbum, deleteAlbum, updateAlbum };
