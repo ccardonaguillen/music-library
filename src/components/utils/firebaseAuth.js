@@ -1,4 +1,3 @@
-import firebase from 'firebase/app';
 import {
     getAuth,
     GoogleAuthProvider,
@@ -39,7 +38,7 @@ function getUserName() {
     return getAuth().currentUser.displayName;
 }
 
-function getUseID() {
+function getUserID() {
     return getAuth().currentUser.uid;
 }
 
@@ -48,6 +47,12 @@ function isUserSignedIn() {
     return !!getAuth().currentUser;
 }
 
-function authStateObserver() {}
-
-export { signIn, signOutUser, initFirebaseAuth, getProfilePicUrl, getUserName, isUserSignedIn };
+export {
+    signIn,
+    signOutUser,
+    initFirebaseAuth,
+    getUserID,
+    getProfilePicUrl,
+    getUserName,
+    isUserSignedIn,
+};

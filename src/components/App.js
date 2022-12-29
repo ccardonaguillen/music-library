@@ -1,4 +1,4 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { createContext, useEffect, useReducer, useState } from 'react';
 import { library as fontLibrary } from '@fortawesome/fontawesome-svg-core';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -26,10 +26,13 @@ import {
 
 fontLibrary.add(faPlus);
 
+const CurrentUserContext = createContext(null);
+
 const App = () => {
     const [filter, setFilter] = useState({ by: '', value: '' });
     const [library, updateLibrary] = useReducer(libraryReducer, []);
     const [libraryDisplay, setLibraryDisplay] = useState([]);
+    const [currentUser, setCurrentUser] = useState(null);
     const [showAlbumModal, setShowAlbumModal] = useState(false);
     const [albumModalMode, setAlbumModalMode] = useState({ name: 'new' });
     const [showOptionsModal, setShowOptionsModal] = useState(false);
@@ -37,7 +40,8 @@ const App = () => {
     const [optionsModalAlbum, setOptionsModalAlbum] = useState('');
 
     useEffect(() => {
-        loadLibrary(updateLibrary);
+        if (currentUser !== null) loadLibrary(updateLibrary);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -45,6 +49,29 @@ const App = () => {
             filter.value === '' ? library : library.filter((album) => filterAlbum(album, filter))
         );
     }, [library, filter]);
+
+    useEffect(() => {
+        if (currentUser !== null) {
+            loadLibrary(updateLibrary);
+        } else {
+            updateLibrary({ type: 'reset', payload: {} });
+        }
+    }, [currentUser]);
+
+    function handleUploadLibrary(e) {
+        const fileInput = e.target;
+
+        let reader = new FileReader();
+        reader.onload = uploadLibrary;
+        reader.readAsText(fileInput.files[0]);
+    }
+
+    function uploadLibrary(e) {
+        const fileContent = e.target.result;
+        const albums = Object.values(JSON.parse(fileContent));
+
+        albums.forEach((info) => handleAddAlbum(info));
+    }
 
     async function handleAddAlbum(info) {
         const match = await findAlbum(info);
@@ -88,53 +115,57 @@ const App = () => {
     }
 
     return (
-        <div id="App">
-            <Header />
-            <main>
-                <div className="container">
-                    <div className="controls-container">
-                        <Summary total={library.length} displayed={libraryDisplay.length} />
-                        <div className="controls">
-                            <Filter onFilterChange={handleChangeFilter} />
-                            <button
-                                className="interactive dark"
-                                id="open-modal"
-                                onClick={() => displayAlbumModal({ name: 'new' })}
-                            >
-                                <FontAwesomeIcon icon="plus" />
-                                <p>New album</p>
-                            </button>
+        <CurrentUserContext.Provider value={{ currentUser, setCurrentUser }}>
+            <div id="App">
+                <Header />
+                <main>
+                    <div className="container">
+                        <div className="controls-container">
+                            <Summary total={library.length} displayed={libraryDisplay.length} />
+                            <div className="controls">
+                                <Filter onFilterChange={handleChangeFilter} />
+                                <button
+                                    className="interactive dark"
+                                    id="open-modal"
+                                    onClick={() => displayAlbumModal({ name: 'new' })}
+                                >
+                                    <FontAwesomeIcon icon="plus" />
+                                    <p>New album</p>
+                                </button>
+                            </div>
                         </div>
+                        {/* <input type="file" name="file-loader" id="file-loader" className="hidden" /> */}
+                        <Table
+                            content={libraryDisplay}
+                            filter={filter}
+                            onOptionsModalOpened={displayOptionsModal}
+                            onToggleProp={handleEditAlbum}
+                            onLibraryUploaded={handleUploadLibrary}
+                        />
                     </div>
-                    {/* <input type="file" name="file-loader" id="file-loader" className="hidden" /> */}
-                    <Table
-                        content={libraryDisplay}
-                        filter={filter}
-                        onOptionsModalOpened={displayOptionsModal}
-                        onToggleProp={handleEditAlbum}
-                    />
-                </div>
-            </main>
-            <Credits project="music-library" />
+                </main>
+                <Credits project="music-library" />
 
-            <AlbumModal
-                show={showAlbumModal}
-                mode={albumModalMode}
-                library={library}
-                onModalClosed={hideAlbumModal}
-                onAlbumAdded={handleAddAlbum}
-                onAlbumEdited={handleEditAlbum}
-            />
-            <OptionsModal
-                show={showOptionsModal}
-                pos={optionsModalPos}
-                album={optionsModalAlbum}
-                onModalClosed={hideOptionsModal}
-                onAlbumDeleted={handleDeleteAlbum}
-                onAlbumEdited={displayAlbumModal}
-            />
-        </div>
+                <AlbumModal
+                    show={showAlbumModal}
+                    mode={albumModalMode}
+                    library={library}
+                    onModalClosed={hideAlbumModal}
+                    onAlbumAdded={handleAddAlbum}
+                    onAlbumEdited={handleEditAlbum}
+                />
+                <OptionsModal
+                    show={showOptionsModal}
+                    pos={optionsModalPos}
+                    album={optionsModalAlbum}
+                    onModalClosed={hideOptionsModal}
+                    onAlbumDeleted={handleDeleteAlbum}
+                    onAlbumEdited={displayAlbumModal}
+                />
+            </div>
+        </CurrentUserContext.Provider>
     );
 };
 
 export default App;
+export { CurrentUserContext };

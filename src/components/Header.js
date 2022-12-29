@@ -1,32 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import {
-    signIn,
-    signOutUser,
-    initFirebaseAuth,
-    getProfilePicUrl,
-    getUserName,
-    isUserSignedIn,
-} from './utils/firebaseAuth';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import React, { useContext, useEffect } from 'react';
+import { signIn, signOutUser, initFirebaseAuth } from './utils/firebaseAuth';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faCompactDisc, faCircleUser } from '@fortawesome/free-solid-svg-icons';
 import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
+import { CurrentUserContext } from './App';
 
 import '../styles/Header.css';
 
 library.add(faGithub, faCompactDisc, faCircleUser);
 
 function Header() {
-    const [userLoggedIn, setUserLoggedIn] = useState(true);
-
-    function initFirebaseAuth() {
-        // Listen to auth state changes.
-        onAuthStateChanged(getAuth(), () => setUserLoggedIn(isUserSignedIn));
-    }
+    const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
 
     useEffect(() => {
-        initFirebaseAuth();
+        initFirebaseAuth(setCurrentUser);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -41,11 +31,11 @@ function Header() {
                     <li>Top 500 (RS3)</li>
                 </ul> */}
                 <div id="nav-user">
-                    {userLoggedIn ? (
+                    {currentUser !== null ? (
                         <>
                             <p onClick={signOutUser}>SIGN OUT</p>
-                            <img alt="Avatar" src={'#'} />
-                            <p>placeholder</p>
+                            <img id="user-avatar" alt="Avatar" src={currentUser.photoURL} />
+                            <p>{currentUser.displayName}</p>
                         </>
                     ) : (
                         <>

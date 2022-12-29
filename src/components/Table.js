@@ -1,4 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { signIn } from './utils/firebaseAuth';
+import { CurrentUserContext } from './App';
 import '../styles/Table.css';
 
 import { library as fontLibrary } from '@fortawesome/fontawesome-svg-core';
@@ -34,14 +36,15 @@ fontLibrary.add(
 );
 
 function Table(props) {
-    const { content, onOptionsModalOpened, onToggleProp } = props;
+    const { content, onOptionsModalOpened, onToggleProp, onLibraryUploaded } = props;
     const [contentDisplay, setContentDisplay] = useState([]);
     const [sorting, setSorting] = useState({ by: 'release_year', order: 'asc' });
     const [showExtraInfo, setShowExtraInfo] = useState({});
+    const { currentUser } = useContext(CurrentUserContext);
 
     useEffect(() => {
         collapseExtraInfo();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -79,6 +82,33 @@ function Table(props) {
         setShowExtraInfo(content.reduce((acc, album) => ({ ...acc, [album.id]: false }), {}));
     }
 
+    function handleSignIn(e) {
+        e.preventDefault();
+        signIn();
+    }
+
+    function handleClickUpload(e) {
+        e.stopPropagation();
+        const fileInput = e.currentTarget.firstChild;
+        fileInput.click();
+    }
+
+    if (currentUser === null)
+        return (
+            <p id="not-signed-in-message">
+                You are not currently logged in.{' '}
+                <span
+                    id="text-clickable"
+                    onClick={handleSignIn}
+                    style={{ textDecoration: 'underline', cursor: 'pointer' }}
+                >
+                    Click here
+                </span>{' '}
+                to log in or use the button at the top of the page to start adding albums to your
+                music library.
+            </p>
+        );
+
     return (
         <div id="entries-count">
             <table id="music-library">
@@ -113,18 +143,43 @@ function Table(props) {
                         <TableHeader title="Favorite" />
                     </tr>
                 </thead>
-                <tbody>
-                    {contentDisplay.map((album) => (
-                        <AlbumRow
-                            key={album.id}
-                            album={album}
-                            displayExtraInfo={showExtraInfo[album.id]}
-                            onClick={handleToggleExtraInfo}
-                            onOptionsModalOpened={onOptionsModalOpened}
-                            onToggleProp={onToggleProp}
-                        />
-                    ))}
-                </tbody>
+                {content.length === 0 ? (
+                    <tr>
+                        <td colSpan={6}>
+                            There are currently no albums in your music library. Use the "New Album"
+                            button to starting adding them or{' '}
+                            <span
+                                id="text-clickable"
+                                onClick={handleClickUpload}
+                                style={{ textDecoration: 'underline', cursor: 'pointer' }}
+                            >
+                                <input
+                                    type="file"
+                                    id="upload"
+                                    name="upload"
+                                    accept=".json"
+                                    onChange={onLibraryUploaded}
+                                    style={{ display: 'none' }}
+                                />
+                                upload a collection
+                            </span>{' '}
+                            from your computer.
+                        </td>
+                    </tr>
+                ) : (
+                    <tbody>
+                        {contentDisplay.map((album) => (
+                            <AlbumRow
+                                key={album.id}
+                                album={album}
+                                displayExtraInfo={showExtraInfo[album.id]}
+                                onClick={handleToggleExtraInfo}
+                                onOptionsModalOpened={onOptionsModalOpened}
+                                onToggleProp={onToggleProp}
+                            />
+                        ))}
+                    </tbody>
+                )}
             </table>
         </div>
     );
