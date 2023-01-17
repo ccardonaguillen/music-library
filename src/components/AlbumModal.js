@@ -1,11 +1,9 @@
 import React, { createRef, useEffect, useState } from 'react';
-import { library as fontLibrary } from '@fortawesome/fontawesome-svg-core';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { fetchRelease } from './utils/discogs';
 
 import '../styles/AlbumModal.css';
-
-fontLibrary.add(faXmark);
 
 function AlbumModal(props) {
     const { mode, show, library, onModalClosed, onAlbumAdded, onAlbumEdited } = props;
@@ -16,7 +14,7 @@ function AlbumModal(props) {
     const formRef = createRef();
 
     useEffect(() => {
-        if (mode.name === 'edit') populateAlbumForm();
+        if (mode.name === 'edit') populateAlbumForm(mode.album);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mode]);
 
@@ -32,10 +30,8 @@ function AlbumModal(props) {
         return formContent;
     }
 
-    function populateAlbumForm() {
-        const { album } = mode;
-
-        for (let prop in album) {
+    function populateAlbumForm(info) {
+        for (let prop in info) {
             switch (prop) {
                 case 'owned':
                 case 'favorite':
@@ -45,7 +41,7 @@ function AlbumModal(props) {
                     );
 
                     for (let button of radioButtons) {
-                        if (String(album[prop]) === button.value) {
+                        if (String(info[prop]) === button.value) {
                             button.click();
                             break;
                         }
@@ -58,7 +54,7 @@ function AlbumModal(props) {
                     );
 
                     for (let box of checkBoxes) {
-                        if (album[prop].some((format) => format === box.value)) {
+                        if (info[prop].some((format) => format === box.value)) {
                             box.click();
                         }
                     }
@@ -67,14 +63,14 @@ function AlbumModal(props) {
                 default:
                     const input = document.querySelector(`input[name="${prop}"]`);
 
-                    if (input && album[prop] !== '') {
-                        input.value = album[prop];
+                    if (input && info[prop] !== '') {
+                        input.value = info[prop];
                     }
                     break;
             }
         }
 
-        setShowRecordInfo(album.owned);
+        setShowRecordInfo(info.owned);
     }
 
     async function submitNewAlbum(e) {
@@ -95,6 +91,15 @@ function AlbumModal(props) {
         setShowRecordInfo(e.target.value === 'true');
     }
 
+    async function handleLoadFromDiscogs(e) {
+        e.preventDefault();
+
+        const release_id = document.getElementById('discogs_id').value;
+        const albumInfo = await fetchRelease(release_id);
+
+        populateAlbumForm(albumInfo);
+    }
+
     if (!show) return null;
 
     return (
@@ -102,7 +107,7 @@ function AlbumModal(props) {
             <div className="modal">
                 <h2>{modalTitle}</h2>
                 <FontAwesomeIcon
-                    icon="xmark"
+                    icon={faXmark}
                     id="close-modal"
                     alt="Close Modal"
                     className="clickable"
@@ -117,6 +122,26 @@ function AlbumModal(props) {
                     onSubmit={submitNewAlbum}
                 >
                     <div className="form-content">
+                        {mode.name === 'new' && (
+                            <div id="modal-hero">
+                                <p>Input the album info manually or load it from Discogs</p>
+                                <form>
+                                    <p>Discogs release ID</p>
+                                    <input
+                                        id="discogs_id"
+                                        type="text"
+                                        placeholder="Release ID"
+                                    ></input>
+                                    <button
+                                        className="interactive light"
+                                        onClick={handleLoadFromDiscogs}
+                                    >
+                                        Load album
+                                    </button>
+                                </form>
+                            </div>
+                        )}
+
                         <fieldset>
                             <legend>General Info</legend>
                             <InputField
@@ -134,7 +159,7 @@ function AlbumModal(props) {
                             />
 
                             <InputField
-                                id="release_year"
+                                id="released"
                                 type="number"
                                 label="Release Year"
                                 placeholder="e.g. 1966"
@@ -258,20 +283,22 @@ function AlbumModal(props) {
                                     label="Catalog Number"
                                     placeholder="e.g. 1 C 072-04 097"
                                 />
-                                <InputField
-                                    id="label"
+                                <InputFieldWithSuggestions
+                                    id="record_label"
                                     type="text"
                                     label="Label"
                                     placeholder="e.g. Apple Records"
+                                    library={library}
                                 />
-                                <InputField
+                                <InputFieldWithSuggestions
                                     id="country"
                                     type="text"
                                     label="Country"
                                     placeholder="e.g. Germany"
+                                    library={library}
                                 />
                                 <InputField
-                                    id="edition-year"
+                                    id="edition"
                                     type="number"
                                     label="Edition Year"
                                     placeholder="e.g. 1977"
@@ -285,7 +312,7 @@ function AlbumModal(props) {
 
                                 <div className="input-container">
                                     <InputField
-                                        id="Condition"
+                                        id="condition"
                                         type="number"
                                         label="Condition"
                                         // max="10"
@@ -399,7 +426,7 @@ function InputSuggestions(props) {
     function filterSuggestions(suggestions) {
         return suggestions.reduce((acc, curr) => {
             // Find matches
-            if (curr.toLowerCase().includes(input.toLowerCase())) {
+            if (curr !== '' && curr.toLowerCase().includes(input.toLowerCase())) {
                 // Avoid duplicates
                 if (acc.indexOf(curr) === -1) acc.push(curr);
             }

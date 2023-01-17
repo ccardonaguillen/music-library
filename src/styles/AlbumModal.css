@@ -14,7 +14,7 @@
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%) scale(1);
-    width: 45rem;
+    width: min(45rem, 90vw);
     max-height: 80vh;
     padding: 3rem 3.5rem;
     border-radius: 10px;
@@ -24,7 +24,7 @@
 }
 
 .modal h2 {
-    margin: 0 0 1.5rem;
+    margin-bottom: 0.5rem;
     font-size: 2.6rem;
 }
 
@@ -36,6 +36,24 @@
     height: 30px;
     padding: 0;
 }
+
+#modal-hero form {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin: 2.5rem 0 1rem;
+}
+
+#modal-hero p,
+#modal-hero button {
+    white-space: nowrap;
+}
+
+#modal-hero button {
+    font-size: 1.4rem;
+    padding: 0.5rem 1rem;
+}
+
 
 .form-content {
     box-sizing: border-box;

@@ -31,7 +31,7 @@ async function findAlbum(info) {
         libraryRef,
         where('title', '==', info.title),
         where('artist', '==', info.artist),
-        where('release_year', '==', info.release_year)
+        where('release_year', '==', info.released)
     );
 
     const querySnapshot = await getDocs(q);
