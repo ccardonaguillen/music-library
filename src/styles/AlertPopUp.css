@@ -1,0 +1,36 @@
+#alert-pop-up {
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    position: fixed;
+    bottom: 5%;
+    left: 50%;
+    transform: translate(-50%, 0);
+    background-color: white;
+    padding: 1rem 2rem;
+    border: 2px solid black;
+    border-radius: 4px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    animation-name: alert-slide-in;
+    animation-timing-function: ease-in;
+    animation-duration: 0.5s;
+}
+
+@keyframes alert-slide-in {
+    0% {
+        bottom: -100px;
+        left: 50%
+    }
+
+    100% {
+        bottom: 40px;
+        left: 50%
+    }
+}
+
+#alert-pop-up svg {
+    color: orangered;
+}

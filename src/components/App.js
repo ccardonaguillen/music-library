@@ -1,5 +1,4 @@
 import React, { createContext, useEffect, useReducer, useState } from 'react';
-import { library as fontLibrary } from '@fortawesome/fontawesome-svg-core';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -23,8 +22,7 @@ import {
     deleteAlbum,
     updateAlbum,
 } from './utils/firebaseDatabase';
-
-fontLibrary.add(faPlus);
+import AlertPopUp from './AlertPopUp';
 
 const CurrentUserContext = createContext(null);
 
@@ -38,6 +36,10 @@ const App = () => {
     const [showOptionsModal, setShowOptionsModal] = useState(false);
     const [optionsModalPos, setOptionsModalPos] = useState({ x: 0, y: 0 });
     const [optionsModalAlbum, setOptionsModalAlbum] = useState('');
+    const [showAlertPopUp, setShowAlertPopUp] = useState(false);
+    const [alertContent, setAlertContent] = useState('');
+
+    let alertTimeoutID;
 
     useEffect(() => {
         if (currentUser !== null) loadLibrary(updateLibrary);
@@ -77,16 +79,23 @@ const App = () => {
         const match = await findAlbum(info);
         const isInLibrary = match.length > 0;
 
-        if (!isInLibrary) addAlbum(info);
+        if (!isInLibrary) {
+            addAlbum(info);
+            displayAlertPopUp('Album added to library: ' + info.title);
+        } else {
+            displayAlertPopUp('Album already exists in library');
+        }
     }
 
     function handleDeleteAlbum(id) {
         deleteAlbum(id);
         setShowOptionsModal(false);
+        displayAlertPopUp('Album removed');
     }
 
     function handleEditAlbum({ id, info }) {
         updateAlbum(id, info);
+        displayAlertPopUp('Album edited');
     }
 
     function handleChangeFilter(newFilter) {
@@ -114,6 +123,17 @@ const App = () => {
         setShowOptionsModal(false);
     }
 
+    function displayAlertPopUp(content) {
+        clearTimeout(alertTimeoutID);
+
+        setAlertContent(content);
+        setShowAlertPopUp(true);
+
+        alertTimeoutID = setTimeout(() => {
+            setShowAlertPopUp(false);
+        }, '3500');
+    }
+
     return (
         <CurrentUserContext.Provider value={{ currentUser, setCurrentUser }}>
             <div id="App">
@@ -129,11 +149,14 @@ const App = () => {
                                     id="open-modal"
                                     onClick={() => displayAlbumModal({ name: 'new' })}
                                 >
-                                    <FontAwesomeIcon icon="plus" />
-                                    <p>New album</p>
+                                    <div>
+                                        <FontAwesomeIcon icon={faPlus} />
+                                        <p>New album</p>
+                                    </div>
                                 </button>
                             </div>
                         </div>
+
                         {/* <input type="file" name="file-loader" id="file-loader" className="hidden" /> */}
                         <Table
                             content={libraryDisplay}
@@ -162,6 +185,7 @@ const App = () => {
                     onAlbumDeleted={handleDeleteAlbum}
                     onAlbumEdited={displayAlbumModal}
                 />
+                <AlertPopUp show={showAlertPopUp} content={alertContent} />
             </div>
         </CurrentUserContext.Provider>
     );
