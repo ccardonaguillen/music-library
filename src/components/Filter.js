@@ -37,14 +37,21 @@ function Filter(props) {
     return (
         <div id="filter">
             <form name="filter-by" id="filter-by" onSubmit={applyFilter}>
-                <label htmlFor="filter-value"> Filter by </label>
-                <select name="by" id="filter" defaultValue="artist" onChange={handleSelectChange}>
-                    <option value="title">Title</option>
-                    <option value="artist">Artist</option>
-                    <option value="release_year">Release</option>
-                    <option value="owned">Owned</option>
-                </select>
-                <div className="semicolon">:</div>
+                <div id="select-container">
+                    <label htmlFor="filter-value"> Filter by </label>
+                    <select
+                        name="by"
+                        id="filter"
+                        defaultValue="artist"
+                        onChange={handleSelectChange}
+                    >
+                        <option value="title">Title</option>
+                        <option value="artist">Artist</option>
+                        <option value="release_year">Release</option>
+                        <option value="owned">Owned</option>
+                    </select>
+                </div>
+                {/* <div className="semicolon">:</div> */}
                 <input
                     type="text"
                     name="value"

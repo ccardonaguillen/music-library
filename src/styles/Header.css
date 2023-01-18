@@ -3,6 +3,7 @@ header {
     display: flex;
     justify-content: center;
     background-color: var(--secondary-color);
+    height: clamp(80px, 14vh, 120px);
     width: 100%;
     box-shadow: 0px 3px 10px var(--shadow-light);
 }
@@ -16,7 +17,7 @@ header .container {
 
 header a {
     display: flex;
-    justify-content: start;
+    justify-content: flex-start;
     align-items: center;
     gap: 10px;
 }
@@ -52,4 +53,12 @@ header h1 {
 
 #nav-user>p {
     cursor: pointer;
+}
+
+@media screen and (max-width: 600px) {
+
+
+    header h1 {
+        display: none;
+    }
 }

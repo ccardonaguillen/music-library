@@ -44,7 +44,7 @@
     margin: 2.5rem 0 1rem;
 }
 
-#modal-hero p,
+#modal-hero label,
 #modal-hero button {
     white-space: nowrap;
 }
@@ -231,4 +231,18 @@ fieldset>legend {
 
 .suggestions li:hover {
     background-color: var(--main-color);
+}
+
+@media screen and (max-width:550px) {
+    .modal {
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: translate(0, 0);
+        position: absolute;
+        box-sizing: border-box;
+        width: 100vw;
+        min-height: 100vh;
+        border-radius: 0;
+    }
 }

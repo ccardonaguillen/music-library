@@ -125,19 +125,14 @@ function AlbumModal(props) {
                         {mode.name === 'new' && (
                             <div id="modal-hero">
                                 <p>Input the album info manually or load it from Discogs</p>
-                                <form>
-                                    <p>Discogs release ID</p>
+                                <form onSubmit={handleLoadFromDiscogs}>
+                                    <label htmlFor="discogs_id">Discogs ID</label>
                                     <input
                                         id="discogs_id"
                                         type="text"
                                         placeholder="Release ID"
                                     ></input>
-                                    <button
-                                        className="interactive light"
-                                        onClick={handleLoadFromDiscogs}
-                                    >
-                                        Load album
-                                    </button>
+                                    <button className="interactive light">Load album</button>
                                 </form>
                             </div>
                         )}

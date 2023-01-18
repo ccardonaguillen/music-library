@@ -38,7 +38,7 @@ fontLibrary.add(
 function Table(props) {
     const { content, onOptionsModalOpened, onToggleProp, onLibraryUploaded } = props;
     const [contentDisplay, setContentDisplay] = useState([]);
-    const [sorting, setSorting] = useState({ by: 'release_year', order: 'asc' });
+    const [sorting, setSorting] = useState({ by: 'released', order: 'asc' });
     const [showExtraInfo, setShowExtraInfo] = useState({});
     const { currentUser } = useContext(CurrentUserContext);
 
@@ -59,7 +59,7 @@ function Table(props) {
             setContentDisplay((prevDisplay) =>
                 [...prevDisplay].sort((a, b) => a[by].localeCompare(b[by]) * sortOrder)
             );
-        } else if (by === 'release_year') {
+        } else if (by === 'released') {
             setContentDisplay((prevDisplay) =>
                 [...prevDisplay].sort((a, b) => (a[by] - b[by]) * sortOrder)
             );
@@ -110,7 +110,7 @@ function Table(props) {
         );
 
     return (
-        <div id="entries-count">
+        <div id="table-container">
             <table id="music-library">
                 <thead className="library-header">
                     <tr>
@@ -134,7 +134,7 @@ function Table(props) {
                         <TableHeader
                             title="Released"
                             className="sortable"
-                            value="release_year"
+                            value="released"
                             type="num"
                             sorting={sorting}
                             onClick={handleChangeSorting}
@@ -187,7 +187,7 @@ function Table(props) {
 
 function AlbumRow(props) {
     const { album, displayExtraInfo, onClick, onOptionsModalOpened, onToggleProp } = props;
-    const { title, artist, release_year, owned, favorite } = album;
+    const { title, artist, released, owned, favorite } = album;
 
     const [optionsVisibility, setOptionsVisibility] = useState('hidden');
 
@@ -203,7 +203,6 @@ function AlbumRow(props) {
 
     function handleOpenOptionsModal(e) {
         e.stopPropagation();
-        console.log(e);
         onOptionsModalOpened({ event: e, album });
     }
 
@@ -224,7 +223,7 @@ function AlbumRow(props) {
                 </td>
                 <td>{title}</td>
                 <td>{artist}</td>
-                <td>{release_year}</td>
+                <td>{released}</td>
                 <td>
                     <FontAwesomeIcon
                         icon={owned ? 'check' : 'xmark'}

@@ -1,9 +1,18 @@
+#table-container {
+    position: relative;
+    width: min(1000px, 100vw);
+
+    overflow-x: auto;
+}
+
 main table {
     font-size: 1.4rem;
     text-align: left;
     width: 100%;
+    margin: 0;
     border-collapse: collapse;
 }
+
 
 th,
 td {
@@ -35,6 +44,7 @@ td:nth-of-type(1) {
 th:nth-of-type(n+4),
 td:nth-of-type(n+4) {
     text-align: center;
+    min-width: 8.2rem;
 }
 
 th:nth-of-type(n+5),
@@ -54,10 +64,18 @@ td:nth-of-type(6) {
 th {
     z-index: 2;
     position: sticky;
-    top: 7rem;
+    top: 0rem;
     background-color: var(--main-color);
     border-bottom: var(--shadow-light) 2px solid;
     font-weight: 600;
+}
+
+@media screen and (max-width: 600px) {
+    th {
+        z-index: inherit;
+        position: relative;
+        top: 0rem;
+    }
 
 }
 

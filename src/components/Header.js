@@ -26,16 +26,12 @@ function Header() {
                     <FontAwesomeIcon icon="compact-disc" alt="Music Library" id="hero-logo" />
                     <h1>Music Library</h1>
                 </a>
-                {/* <ul>
-                    <li>Top 500 (RS1)</li>
-                    <li>Top 500 (RS3)</li>
-                </ul> */}
                 <div id="nav-user">
                     {currentUser !== null ? (
                         <>
                             <p onClick={signOutUser}>SIGN OUT</p>
                             <img id="user-avatar" alt="Avatar" src={currentUser.photoURL} />
-                            <p>{currentUser.displayName}</p>
+                            {/* <p>{currentUser.displayName}</p> */}
                         </>
                     ) : (
                         <>
