@@ -7,21 +7,24 @@ import {
 } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { getFirebaseConfig } from './firebase-config.js';
+import { initUserLibrary } from './firebaseDatabase.js';
 
 const firebaseAppConfig = getFirebaseConfig();
 initializeApp(firebaseAppConfig);
 
 async function signIn() {
     var provider = new GoogleAuthProvider();
-    await signInWithPopup(getAuth(), provider);
+    provider.setCustomParameters({
+        prompt: 'select_account',
+    });
 
-    console.log('logged in');
+    await signInWithPopup(getAuth(), provider);
 }
 
 function signOutUser() {
     // Sign out of Firebase.
     signOut(getAuth());
-    console.log(getAuth().currentUser);
+    // console.log(getAuth().currentUser);
 }
 
 function initFirebaseAuth(authStateObserver) {

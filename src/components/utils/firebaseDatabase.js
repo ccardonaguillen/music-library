@@ -10,10 +10,13 @@ import {
     where,
     updateDoc,
 } from 'firebase/firestore';
+import { getUserID } from './firebaseAuth';
+
+const getLibraryRef = () => collection(getFirestore(), getUserID());
 
 async function loadLibrary(dispatch) {
     dispatch({ type: 'reset', payload: {} });
-    const q = query(collection(getFirestore(), 'library'));
+    const q = query(collection(getFirestore(), getUserID()));
 
     onSnapshot(q, (snapshot) => {
         snapshot.docChanges().forEach((change) => {
@@ -26,33 +29,40 @@ async function loadLibrary(dispatch) {
 }
 
 async function findAlbum(info) {
-    const libraryRef = collection(getFirestore(), 'library');
     const q = query(
-        libraryRef,
+        getLibraryRef(),
         where('title', '==', info.title),
         where('artist', '==', info.artist),
         where('release_year', '==', info.released)
     );
-
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map((doc) => doc);
 }
 
 async function addAlbum(info) {
     try {
-        await addDoc(collection(getFirestore(), 'library'), info);
+        const match = await findAlbum(info);
+        const isInLibrary = match?.length > 0;
+
+        if (isInLibrary) {
+            return { successful: false, error: 'duplicated' };
+        } else {
+            await addDoc(getLibraryRef(), info);
+            return { successful: true };
+        }
     } catch (error) {
         console.error('Error writing new message to Firebase Database.', error);
+        return { successful: false, error: 'other' };
     }
 }
 
 async function deleteAlbum(id) {
-    const albumRef = doc(getFirestore(), 'library', id);
+    const albumRef = doc(getLibraryRef(), id);
     await deleteDoc(albumRef);
 }
 
 async function updateAlbum(id, info) {
-    const albumRef = doc(getFirestore(), 'library', id);
+    const albumRef = doc(getLibraryRef(), id);
     await updateDoc(albumRef, info);
 }
 

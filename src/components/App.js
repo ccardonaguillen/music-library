@@ -15,13 +15,7 @@ import OptionsModal from './OptionsModal';
 
 import libraryReducer from './utils/reducer';
 import { filterAlbum } from './utils/libraryFilter';
-import {
-    loadLibrary,
-    findAlbum,
-    addAlbum,
-    deleteAlbum,
-    updateAlbum,
-} from './utils/firebaseDatabase';
+import { loadLibrary, addAlbum, deleteAlbum, updateAlbum } from './utils/firebaseDatabase';
 import AlertPopUp from './AlertPopUp';
 
 const CurrentUserContext = createContext(null);
@@ -76,15 +70,19 @@ const App = () => {
     }
 
     async function handleAddAlbum(info) {
-        const match = await findAlbum(info);
-        const isInLibrary = match.length > 0;
+        const status = await addAlbum(info);
+        let alert = '';
 
-        if (!isInLibrary) {
-            addAlbum(info);
-            displayAlertPopUp('Album added to library: ' + info.title);
+        if (status.successful) {
+            alert = 'Album added to library: ' + info.title;
         } else {
-            displayAlertPopUp('Album already exists in library');
+            alert =
+                status.error === 'duplicated'
+                    ? 'Album already exists in library'
+                    : 'Error adding album to library';
         }
+
+        displayAlertPopUp(alert);
     }
 
     function handleDeleteAlbum(id) {
@@ -139,33 +137,37 @@ const App = () => {
             <div id="App">
                 <Header />
                 <main>
-                    <div className="container">
-                        <div className="controls-container">
-                            <Summary total={library.length} displayed={libraryDisplay.length} />
-                            <div className="controls">
-                                <Filter onFilterChange={handleChangeFilter} />
-                                <button
-                                    className="interactive dark"
-                                    id="open-modal"
-                                    onClick={() => displayAlbumModal({ name: 'new' })}
-                                >
-                                    <div>
-                                        <FontAwesomeIcon icon={faPlus} />
-                                        <p>New album</p>
-                                    </div>
-                                </button>
-                            </div>
+                    <div className="controls-container">
+                        <Summary total={library.length} displayed={libraryDisplay.length} />
+                        <div className="controls">
+                            <Filter onFilterChange={handleChangeFilter} />
+                            <button
+                                className="interactive dark"
+                                id="open-modal"
+                                onClick={() => displayAlbumModal({ name: 'new' })}
+                            >
+                                <div>
+                                    <FontAwesomeIcon icon={faPlus} />
+                                    <p>New album</p>
+                                </div>
+                            </button>
                         </div>
-
-                        {/* <input type="file" name="file-loader" id="file-loader" className="hidden" /> */}
-                        <Table
-                            content={libraryDisplay}
-                            filter={filter}
-                            onOptionsModalOpened={displayOptionsModal}
-                            onToggleProp={handleEditAlbum}
-                            onLibraryUploaded={handleUploadLibrary}
-                        />
                     </div>
+
+                    {/* <input
+                        type="file"
+                        accept=".json"
+                        name="file-loader"
+                        id="file-loader"
+                        onChange={handleUploadLibrary}
+                    /> */}
+                    <Table
+                        content={libraryDisplay}
+                        filter={filter}
+                        onOptionsModalOpened={displayOptionsModal}
+                        onToggleProp={handleEditAlbum}
+                        onLibraryUploaded={handleUploadLibrary}
+                    />
                 </main>
                 <Credits project="music-library" />
 
