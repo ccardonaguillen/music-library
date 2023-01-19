@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import '../styles/Credits.css';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -8,9 +9,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 library.add(faGithub);
 
 export default function Credits(props) {
+    const { t } = useTranslation();
+
     return (
         <div id="credits">
-            <p>Design and code</p>
+            <p>{t('credits')}</p>
             <a href={'https://github.com/ccardonaguillen/' + props.project}>
                 <FontAwesomeIcon icon={['fab', 'github']} id="github-logo" alt="Github" />
             </a>

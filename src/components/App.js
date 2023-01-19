@@ -1,4 +1,5 @@
 import React, { createContext, useEffect, useReducer, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -32,6 +33,7 @@ const App = () => {
     const [optionsModalAlbum, setOptionsModalAlbum] = useState('');
     const [showAlertPopUp, setShowAlertPopUp] = useState(false);
     const [alertContent, setAlertContent] = useState('');
+    const { t } = useTranslation();
 
     let alertTimeoutID;
 
@@ -74,12 +76,12 @@ const App = () => {
         let alert = '';
 
         if (status.successful) {
-            alert = 'Album added to library: ' + info.title;
+            alert = t('alerts.added.success', { title: info.title });
         } else {
             alert =
                 status.error === 'duplicated'
-                    ? 'Album already exists in library'
-                    : 'Error adding album to library';
+                    ? t('alerts.added.duplicated')
+                    : t('alerts.added.error');
         }
 
         displayAlertPopUp(alert);
@@ -88,12 +90,12 @@ const App = () => {
     function handleDeleteAlbum(id) {
         deleteAlbum(id);
         setShowOptionsModal(false);
-        displayAlertPopUp('Album removed');
+        displayAlertPopUp(t('alerts.removed'));
     }
 
     function handleEditAlbum({ id, info }) {
         updateAlbum(id, info);
-        displayAlertPopUp('Album edited');
+        displayAlertPopUp(t('alerts.edited'));
     }
 
     function handleChangeFilter(newFilter) {
@@ -148,7 +150,7 @@ const App = () => {
                             >
                                 <div>
                                     <FontAwesomeIcon icon={faPlus} />
-                                    <p>New album</p>
+                                    <p>{t('controls.newAlbum')}</p>
                                 </div>
                             </button>
                         </div>

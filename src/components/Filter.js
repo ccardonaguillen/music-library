@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import '../styles/Filter.css';
+import { useTranslation } from 'react-i18next';
 
 function Filter(props) {
-    const [placeholder, setPlaceholder] = useState('e.g. "zeppelin", "beatles, rolling"');
-
+    const { t } = useTranslation();
     const placeholderList = {
         title: '"submarine"',
         artist: '"zeppelin", "beatles, rolling"',
@@ -12,10 +12,14 @@ function Filter(props) {
         format: '"Vynil", "cd+casette", "vynil/CD"',
     };
 
+    const [placeholder, setPlaceholder] = useState(
+        t('common.exampleAbbr') + placeholderList['artist']
+    );
+
     function handleSelectChange(e) {
         const value = e.target.value;
 
-        setPlaceholder('e.g. ' + placeholderList[value]);
+        setPlaceholder(t('common.exampleAbbr') + placeholderList[value]);
     }
 
     function applyFilter(e = null) {
@@ -38,17 +42,17 @@ function Filter(props) {
         <div id="filter">
             <form name="filter-by" id="filter-by" onSubmit={applyFilter}>
                 <div id="select-container">
-                    <label htmlFor="filter-value"> Filter by </label>
+                    <label htmlFor="filter-value">{t('controls.filter.by')}</label>
                     <select
                         name="by"
                         id="filter"
                         defaultValue="artist"
                         onChange={handleSelectChange}
                     >
-                        <option value="title">Title</option>
-                        <option value="artist">Artist</option>
-                        <option value="release_year">Release</option>
-                        <option value="owned">Owned</option>
+                        <option value="title">{t('fields.title')}</option>
+                        <option value="artist">{t('fields.artist')}</option>
+                        <option value="release_year">{t('fields.released.short')}</option>
+                        <option value="owned">{t('fields.owned')}</option>
                     </select>
                 </div>
                 {/* <div className="semicolon">:</div> */}
@@ -61,7 +65,7 @@ function Filter(props) {
                     onInput={resetFilter}
                 />
                 <button className="interactive light" type="submit">
-                    Apply filter
+                    {t('controls.filter.apply')}
                 </button>
             </form>
         </div>

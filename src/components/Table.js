@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { signIn } from './utils/firebaseAuth';
 import { CurrentUserContext } from './App';
 import '../styles/Table.css';
@@ -41,6 +42,7 @@ function Table(props) {
     const [sorting, setSorting] = useState({ by: 'released', order: 'asc' });
     const [showExtraInfo, setShowExtraInfo] = useState({});
     const { currentUser } = useContext(CurrentUserContext);
+    const { t } = useTranslation();
 
     useEffect(() => {
         collapseExtraInfo();
@@ -96,16 +98,15 @@ function Table(props) {
     if (currentUser === null)
         return (
             <p id="not-signed-in-message">
-                You are not currently logged in.{' '}
+                {t('table.notLogged.part1')}
                 <span
                     id="text-clickable"
                     onClick={handleSignIn}
                     style={{ textDecoration: 'underline', cursor: 'pointer' }}
                 >
-                    Click here
+                    {t('table.notLogged.action')}
                 </span>{' '}
-                to log in or use the button at the top of the page to start adding albums to your
-                music library.
+                {t('table.notLogged.part2')}
             </p>
         );
 
@@ -116,7 +117,7 @@ function Table(props) {
                     <tr>
                         <TableHeader className="album-options" />
                         <TableHeader
-                            title="Title"
+                            title={t('fields.title')}
                             className="sortable"
                             value="title"
                             type="alph"
@@ -124,7 +125,7 @@ function Table(props) {
                             onClick={handleChangeSorting}
                         />
                         <TableHeader
-                            title="Artist"
+                            title={t('fields.artist')}
                             className="sortable"
                             value="artist"
                             type="alph"
@@ -132,22 +133,21 @@ function Table(props) {
                             onClick={handleChangeSorting}
                         />
                         <TableHeader
-                            title="Released"
+                            title={t('fields.released.short')}
                             className="sortable"
                             value="released"
                             type="num"
                             sorting={sorting}
                             onClick={handleChangeSorting}
                         />
-                        <TableHeader title="Owned" />
-                        <TableHeader title="Favorite" />
+                        <TableHeader title={t('fields.owned')} />
+                        <TableHeader title={t('fields.favorite')} />
                     </tr>
                 </thead>
                 {content.length === 0 ? (
                     <tr>
                         <td colSpan={6}>
-                            There are currently no albums in your music library. Use the "New Album"
-                            button to starting adding them or{' '}
+                            {t('table.noAlbums.part1')}
                             <span
                                 id="text-clickable"
                                 onClick={handleClickUpload}
@@ -161,9 +161,9 @@ function Table(props) {
                                     onChange={onLibraryUploaded}
                                     style={{ display: 'none' }}
                                 />
-                                upload a collection
+                                {t('table.noAlbums.action')}
                             </span>{' '}
-                            from your computer.
+                            {t('table.noAlbums.part2')}
                         </td>
                     </tr>
                 ) : (
@@ -278,8 +278,9 @@ function TableHeader(props) {
 
 function ExtraInfoRow(props) {
     const { album } = props;
+    const { t } = useTranslation();
     const generalInfo = [
-        { key: 'genre', label: 'Genre', icon: '', type: 'text' },
+        { key: 'genre', label: t('fields.genre'), icon: '', type: 'text' },
         { key: 'topRS1', label: 'Top500 (RS1)', icon: '', type: 'text' },
         { key: 'topRS3', label: 'Top500 (RS3)', icon: '', type: 'text' },
         { key: 'discogs', label: 'Discogs', icon: '', type: 'url' },
@@ -287,20 +288,20 @@ function ExtraInfoRow(props) {
     ];
 
     const recordInfo = [
-        { key: 'catalog_num', label: 'Catalog #', icon: '' },
-        { key: 'record_label', label: 'Label', icon: '' },
-        { key: 'country', label: 'Country', icon: '' },
-        { key: 'edition_year', label: 'Edition', icon: '' },
-        { key: 'matrix', label: 'Matrix', icon: '' },
-        { key: 'condition', label: 'Condition', icon: '' },
-        { key: 'notes', label: 'Notes', icon: '' },
+        { key: 'catalog_num', label: t('fields.released.short'), icon: '' },
+        { key: 'record_label', label: t('fields.label'), icon: '' },
+        { key: 'country', label: t('fields.country'), icon: '' },
+        { key: 'edition', label: t('fields.edition.short'), icon: '' },
+        { key: 'matrix', label: t('fields.matrix'), icon: '' },
+        { key: 'condition', label: t('fields.condition'), icon: '' },
+        { key: 'notes', label: t('fields.notes'), icon: '' },
     ];
 
     return (
         <tr className="extra-info">
             <td colSpan="6">
                 <div>
-                    <img alt="Album Jacket" src={album.jacket} className="album-jacket" />
+                    <img alt={t('fields.jacket')} src={album.jacket} className="album-jacket" />
                     <div className="album-info general-info">
                         {generalInfo.map((field) =>
                             field.type === 'text' ? (
@@ -316,7 +317,8 @@ function ExtraInfoRow(props) {
                     </div>
                     <div className="album-info record-info">
                         <p>
-                            <strong>Format:</strong> {album.record_format} ({album.album_format})
+                            <strong>{t('fields.format')}:</strong>
+                            {album.record_format} ({album.album_format})
                         </p>
                         {recordInfo.map((field) => (
                             <p>

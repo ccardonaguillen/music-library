@@ -6,9 +6,7 @@ import { faGithub } from '@fortawesome/free-brands-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { CurrentUserContext } from './App';
-
 import { useTranslation } from 'react-i18next';
-import i18n from './utils/i18n';
 
 import '../styles/Header.css';
 
@@ -21,7 +19,7 @@ const lngs = {
 
 function Header() {
     const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     useEffect(() => {
         initFirebaseAuth(setCurrentUser);
@@ -52,13 +50,13 @@ function Header() {
                 <div id="nav-user">
                     {currentUser !== null ? (
                         <>
-                            <p onClick={signOutUser}>SIGN OUT</p>
+                            <p onClick={signOutUser}>{t('header.user.signOut')}</p>
                             <img id="user-avatar" alt="Avatar" src={currentUser.photoURL} />
                             {/* <p>{currentUser.displayName}</p> */}
                         </>
                     ) : (
                         <>
-                            <p onClick={signIn}>SIGN IN WITH GOOGLE</p>
+                            <p onClick={signIn}>{t('header.user.signIn')}</p>
                             <FontAwesomeIcon icon="circle-user" id="user-avatar" />
                         </>
                     )}

@@ -1,13 +1,15 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 function Summary(props) {
     const { total, displayed } = props;
+    const { t } = useTranslation();
 
     return (
         <div id="entries-count">
             {total === 0
-                ? 'No albums in the library. Add one by clicking the button'
-                : `Showing ${displayed} out of ${total} albums`}
+                ? t('controls.entries.zero')
+                : t('controls.entries.other', { displayed, total })}
         </div>
     );
 }

@@ -1,14 +1,19 @@
 import React, { createRef, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+
 import { fetchRelease } from './utils/discogs';
 
 import '../styles/AlbumModal.css';
 
 function AlbumModal(props) {
+    const { t } = useTranslation();
+
     const { mode, show, library, onModalClosed, onAlbumAdded, onAlbumEdited } = props;
-    const modalTitle = mode.name === 'new' ? 'New Album' : 'Edit Album';
-    const resetButtonLabel = mode.name === 'new' ? 'Reset' : 'Cancel';
+    const modalTitle = mode.name === 'new' ? t('albumModal.title.new') : t('albumModal.title.edit');
+    const resetButtonLabel =
+        mode.name === 'new' ? t('albumModal.buttons.reset') : t('albumModal.buttons.cancel');
 
     const [showRecordInfo, setShowRecordInfo] = useState(false);
     const formRef = createRef();
@@ -109,7 +114,7 @@ function AlbumModal(props) {
                 <FontAwesomeIcon
                     icon={faXmark}
                     id="close-modal"
-                    alt="Close Modal"
+                    alt={t('albumModal.buttons.close')}
                     className="clickable"
                     onClick={onModalClosed}
                 />
@@ -124,7 +129,7 @@ function AlbumModal(props) {
                     <div className="form-content">
                         {mode.name === 'new' && (
                             <div id="modal-hero">
-                                <p>Input the album info manually or load it from Discogs</p>
+                                <p>{t('albumModal.hero')}</p>
                                 <form onSubmit={handleLoadFromDiscogs}>
                                     <label htmlFor="discogs_id">Discogs ID</label>
                                     <input
@@ -132,36 +137,38 @@ function AlbumModal(props) {
                                         type="text"
                                         placeholder="Release ID"
                                     ></input>
-                                    <button className="interactive light">Load album</button>
+                                    <button className="interactive light">
+                                        {t('albumModal.buttons.load')}
+                                    </button>
                                 </form>
                             </div>
                         )}
 
                         <fieldset>
-                            <legend>General Info</legend>
+                            <legend>{t('albumModal.fieldsets.general')}</legend>
                             <InputField
                                 id="title"
                                 type="text"
-                                label="Title"
-                                placeholder="e.g. Revolver"
+                                label={t('fields.title')}
+                                placeholder={t('common.exampleAbbr') + 'Revolver'}
                             />
                             <InputFieldWithSuggestions
                                 id="artist"
                                 type="text"
-                                label="Artist"
-                                placeholder="e.g. The Beatles"
+                                label={t('fields.artist')}
+                                placeholder={t('common.exampleAbbr') + 'The Beatles'}
                                 library={library}
                             />
 
                             <InputField
                                 id="released"
                                 type="number"
-                                label="Release Year"
-                                placeholder="e.g. 1966"
+                                label={t('fields.released.long')}
+                                placeholder={t('common.exampleAbbr') + '1966'}
                             />
                             <InputSelect
                                 id="genre"
-                                title="Genre"
+                                title={t('fields.genre')}
                                 defaultValue=""
                                 options={[
                                     { value: '', label: 'Choose a genre...', disabled: true },
@@ -185,11 +192,11 @@ function AlbumModal(props) {
                                 <InputOptions
                                     name="owned"
                                     type="radio"
-                                    title="Do you own a copy?"
+                                    title={t('albumModal.labels.owned')}
                                     containerClass="radio-container"
                                     onChange={handleOwnedChange}
                                     options={[
-                                        { id: 'owned', value: true, label: 'Yes' },
+                                        { id: 'owned', value: true, label: t('common.yes') },
                                         {
                                             id: 'not-owned',
                                             value: false,
@@ -201,10 +208,10 @@ function AlbumModal(props) {
                                 <InputOptions
                                     name="favorite"
                                     type="radio"
-                                    title="Mark as favorite?"
+                                    title={t('albumModal.labels.favorite')}
                                     containerClass="radio-container"
                                     options={[
-                                        { id: 'fav', value: 'true', label: 'Yes' },
+                                        { id: 'fav', value: 'true', label: t('common.yes') },
                                         {
                                             id: 'not-fav',
                                             value: 'false',
@@ -235,36 +242,44 @@ function AlbumModal(props) {
                             <InputField
                                 id="wikipedia"
                                 type="url"
-                                label="Wikipedia Page"
+                                label={t('albumModal.labels.wikipedia')}
                                 placeholder="es.wikipedia.org/wiki/..."
                             />
                             <InputField
                                 id="discogs"
                                 type="url"
-                                label="Discogs Link"
+                                label={t('albumModal.labels.discogs')}
                                 placeholder="www.discogs.com/release/..."
                             />
-                            <InputField id="jacket" type="url" label="Album Jacket" />
+                            <InputField id="jacket" type="url" label={t('fields.jacket')} />
                         </fieldset>
                         {showRecordInfo && (
                             <fieldset id="record-info-fs" disabled={!showRecordInfo}>
-                                <legend>Record Info</legend>
+                                <legend>{t('albumModal.fieldsets.record')}</legend>
                                 <InputOptions
                                     id="record_format"
                                     type="checkbox"
-                                    title="Record format(s)"
+                                    title={t('albumModal.labels.record')}
                                     containerClass="checkbox-container"
                                     options={[
-                                        { id: 'vinyl', value: 'Vinyl', label: 'Vinyl' },
+                                        {
+                                            id: 'vinyl',
+                                            value: 'Vinyl',
+                                            label: t('fields.recordFormat.vynil'),
+                                        },
                                         { id: 'cd', value: 'CD', label: 'CD' },
                                         { id: 'casette', value: 'Casette', label: 'Casette' },
-                                        { id: 'other', value: 'Other', label: 'Other' },
+                                        {
+                                            id: 'other',
+                                            value: 'Other',
+                                            label: t('fields.recordFormat.other'),
+                                        },
                                     ]}
                                 />
                                 <InputOptions
                                     id="album_format"
                                     type="radio"
-                                    title="Album format"
+                                    title={t('albumModal.labels.album')}
                                     containerClass="album-format-container"
                                     options={[
                                         { id: 'ep', value: 'EP', label: 'EP (Extended Play)' },
@@ -275,48 +290,50 @@ function AlbumModal(props) {
                                 <InputField
                                     id="catalog"
                                     type="text"
-                                    label="Catalog Number"
-                                    placeholder="e.g. 1 C 072-04 097"
+                                    label={t('fields.catalog.long')}
+                                    placeholder={t('common.exampleAbbr') + '1 C 072-04 097'}
                                 />
                                 <InputFieldWithSuggestions
                                     id="record_label"
                                     type="text"
-                                    label="Label"
-                                    placeholder="e.g. Apple Records"
+                                    label={t('fields.label')}
+                                    placeholder={t('common.exampleAbbr') + 'Apple Records'}
                                     library={library}
                                 />
                                 <InputFieldWithSuggestions
                                     id="country"
                                     type="text"
-                                    label="Country"
-                                    placeholder="e.g. Germany"
+                                    label={t('fields.country')}
+                                    placeholder={t('common.exampleAbbr') + 'Germany'}
                                     library={library}
                                 />
                                 <InputField
                                     id="edition"
                                     type="number"
-                                    label="Edition Year"
-                                    placeholder="e.g. 1977"
+                                    label={t('fields.edition.long')}
+                                    placeholder={t('common.exampleAbbr') + '1977'}
                                 />
                                 <InputField
                                     id="matrix"
                                     type="text"
-                                    label="Matrix"
-                                    placeholder="e.g. 04097-A-2 SHZE 186 A - X2"
+                                    label={t('fields.matrix')}
+                                    placeholder={
+                                        t('common.exampleAbbr') + '04097-A-2 SHZE 186 A - X2'
+                                    }
                                 />
 
                                 <div className="input-container">
                                     <InputField
                                         id="condition"
                                         type="number"
-                                        label="Condition"
+                                        label={t('fields.condition')}
                                         // max="10"
                                         placeholder="1&ndash;10"
                                     />
                                     <InputField
                                         id="ndisks"
                                         type="number"
-                                        label="Disks"
+                                        label={t('fields.ndisk')}
                                         // value="1"
                                         //     min="1"
                                         placeholder=">1"
@@ -325,7 +342,7 @@ function AlbumModal(props) {
                                 <InputField
                                     id="notes"
                                     type="text"
-                                    label="Notes"
+                                    label={t('fields.notes')}
                                     placeholder="Here goes any other info related to the record"
                                 />
                             </fieldset>
@@ -333,7 +350,7 @@ function AlbumModal(props) {
                     </div>
                     <div className="button-container">
                         <button className="interactive dark" type="submit">
-                            Submit
+                            {t('albumModal.buttons.submit')}
                         </button>
                         <button
                             className="interactive light"
