@@ -7,7 +7,6 @@ import {
 } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
 import { getFirebaseConfig } from './firebase-config.js';
-import { initUserLibrary } from './firebaseDatabase.js';
 
 const firebaseAppConfig = getFirebaseConfig();
 initializeApp(firebaseAppConfig);

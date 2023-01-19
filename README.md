@@ -4,13 +4,11 @@ Library to register all records (CD, Vynil or other formats) that the user owns 
 
 ## TO DO
 
--   Retocar anchura de columnas "owned" y "favorite"
 -   Adaptar diseño para moviles
 -   Escoger varios generos para un mismo disco
 
 ## POSSIBLE FUTURE ADDITIONS
 
--   Añadir datos basicos disco desde Discogs (u otra pagina?) pasando el link
 -   Filtros multiples? (opcion en columnas o como "etiquetas")
 -   Menú filtrado (multiple) en barra lateral (Filtrar por.... "+ Añadir filtro...")
 
@@ -24,8 +22,10 @@ Library to register all records (CD, Vynil or other formats) that the user owns 
     1.  Utilizar la modificacion anterior para borrar y poner una fila en su lugar actualizando solo esta fila
     2.  Crear/modificar funcion para actualizar contenido de la fila --> preferible esta opcion para usarla con iconos clicables
 
--   Cambiar modo de editar con formulario utilizando funcion "editAlbumDetails" en vez de "addAlbum"
-
 -   Añadir clases a las diferentes columnas para facilitar la seleccion en CSS
 
--   Generalizar sugerencias y añadir a otros campos (País, sello, etc.)
+# KNOWN BUGS
+
+-   Duplicated albums can be added
+-   Second fieldset of new album modal is cleared when "NO" is selected as an option in the "Do you own a copy?" input
+-   When applying filter with no coincidences message of collection with no albums in it appears. Change to correct message

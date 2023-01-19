@@ -150,3 +150,27 @@ th svg {
 .general-info>a:visited {
     color: black;
 }
+
+
+@media screen and (max-width: 660px) {
+    .extra-info>td>div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        width: 100vw;
+    }
+
+    .album-jacket {
+        width: min(250px, 60vw);
+        grid-row: 1 / 3;
+        padding-right: 1rem;
+
+    }
+
+    .album-info {
+        width: 90%;
+        padding: 0;
+        padding-right: 1rem;
+    }
+}
