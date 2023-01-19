@@ -7,12 +7,21 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { CurrentUserContext } from './App';
 
+import { useTranslation } from 'react-i18next';
+import i18n from './utils/i18n';
+
 import '../styles/Header.css';
 
 library.add(faGithub, faCompactDisc, faCircleUser);
 
+const lngs = {
+    en: { nativeName: 'English' },
+    es: { nativeName: 'Español' },
+};
+
 function Header() {
     const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+    const { t } = useTranslation();
 
     useEffect(() => {
         initFirebaseAuth(setCurrentUser);
@@ -24,8 +33,22 @@ function Header() {
             <div className="container">
                 <a href="https://ccardonaguillen.github.io/music-library/" target="">
                     <FontAwesomeIcon icon="compact-disc" alt="Music Library" id="hero-logo" />
-                    <h1>Music Library</h1>
+                    <h1>{t('header.title')}</h1>
                 </a>
+                <div>
+                    {Object.keys(lngs).map((lng) => (
+                        <button
+                            key={lng}
+                            style={{
+                                fontWeight: i18n.resolvedLanguage === lng ? 'bold' : 'normal',
+                            }}
+                            type="submit"
+                            onClick={() => i18n.changeLanguage(lng)}
+                        >
+                            {lngs[lng].nativeName}
+                        </button>
+                    ))}
+                </div>
                 <div id="nav-user">
                     {currentUser !== null ? (
                         <>
