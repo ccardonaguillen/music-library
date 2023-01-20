@@ -34,17 +34,13 @@ function filterAlbum(album, filter) {
 
         case 'owned':
             // Allow the use of different words for true and false
-            if (
-                value.toLowerCase() in ['1', 'yes', 'true', 'own', 'sí', 'si', 'adq', 'adquirido']
-            ) {
+            if (['1', 'yes', 'true', 'sí', 'si'].includes(value.toLowerCase())) {
                 return album['owned'];
-            } else if (
-                value.toLowerCase() in
-                ['0', 'no', 'not', 'false', '!owned', 'want', '!adq', '!adquirido']
-            ) {
+            } else if (['0', 'no', 'not', 'false', 'want'].includes(value.toLowerCase())) {
+                console.log('false');
                 return !album['owned'];
             } else {
-                return true;
+                return false;
             }
         case 'format':
             // In this filter "+" = "and" and "[,;/]" = "or"
