@@ -4,6 +4,7 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import { fetchRelease } from './utils/discogs';
+import { parseAlbumForm, populateAlbumForm } from './utils/albumForm';
 
 import '../styles/AlbumModal.css';
 
@@ -19,69 +20,17 @@ function AlbumModal(props) {
     const formRef = createRef();
 
     useEffect(() => {
-        if (mode.name === 'edit') populateAlbumForm(mode.album);
+        if (mode.name === 'edit') {
+            const albumOwned = populateAlbumForm(mode.album);
+            setShowRecordInfo(albumOwned);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [mode]);
-
-    function parseAlbumForm() {
-        let formData = new FormData(formRef.current);
-
-        let formContent = Object.fromEntries(formData.entries());
-
-        formContent['owned'] = formContent['owned'] === 'true' ? true : false;
-        formContent['favorite'] = formContent['favorite'] === 'true' ? true : false;
-        formContent['format'] = formData.getAll('format');
-
-        return formContent;
-    }
-
-    function populateAlbumForm(info) {
-        for (let prop in info) {
-            switch (prop) {
-                case 'owned':
-                case 'favorite':
-                case 'album_format':
-                    const radioButtons = document.querySelectorAll(
-                        `input[type=radio][name=${prop}]`
-                    );
-
-                    for (let button of radioButtons) {
-                        if (String(info[prop]) === button.value) {
-                            button.click();
-                            break;
-                        }
-                    }
-                    break;
-
-                case 'record_format':
-                    const checkBoxes = document.querySelectorAll(
-                        `input[type=checkbox][name=${prop}]`
-                    );
-
-                    for (let box of checkBoxes) {
-                        if (info[prop].some((format) => format === box.value)) {
-                            box.click();
-                        }
-                    }
-                    break;
-
-                default:
-                    const input = document.querySelector(`input[name="${prop}"]`);
-
-                    if (input && info[prop] !== '') {
-                        input.value = info[prop];
-                    }
-                    break;
-            }
-        }
-
-        setShowRecordInfo(info.owned);
-    }
 
     async function submitNewAlbum(e) {
         e.preventDefault();
 
-        const info = parseAlbumForm();
+        const info = parseAlbumForm(formRef);
         // console.log(info);
         mode.name === 'new' ? onAlbumAdded(info) : onAlbumEdited({ id: mode.album.id, info });
 
