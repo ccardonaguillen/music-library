@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/music-library/static/css/main.fcc650bf.css",
-    "main.js": "/music-library/static/js/main.2ee2d581.js",
+    "main.css": "/music-library/static/css/main.220da5b0.css",
+    "main.js": "/music-library/static/js/main.16efd1af.js",
     "index.html": "/music-library/index.html",
-    "main.fcc650bf.css.map": "/music-library/static/css/main.fcc650bf.css.map",
-    "main.2ee2d581.js.map": "/music-library/static/js/main.2ee2d581.js.map"
+    "main.220da5b0.css.map": "/music-library/static/css/main.220da5b0.css.map",
+    "main.16efd1af.js.map": "/music-library/static/js/main.16efd1af.js.map"
   },
   "entrypoints": [
-    "static/css/main.fcc650bf.css",
-    "static/js/main.2ee2d581.js"
+    "static/css/main.220da5b0.css",
+    "static/js/main.16efd1af.js"
   ]
 }
