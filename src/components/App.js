@@ -13,11 +13,13 @@ import Summary from './Summary';
 import Table from './Table';
 import AlbumModal from './AlbumModal';
 import OptionsModal from './OptionsModal';
+import Sidebar from './Sidebar';
 
 import libraryReducer from './utils/reducer';
 import { filterAlbum } from './utils/libraryFilter';
 import { loadLibrary, addAlbum, deleteAlbum, updateAlbum } from './utils/firebaseDatabase';
 import AlertPopUp from './AlertPopUp';
+import { parseCollection } from './utils/csvLoader';
 
 const CurrentUserContext = createContext(null);
 
@@ -32,7 +34,8 @@ const App = () => {
     const [optionsModalPos, setOptionsModalPos] = useState({ x: 0, y: 0 });
     const [optionsModalAlbum, setOptionsModalAlbum] = useState('');
     const [showAlertPopUp, setShowAlertPopUp] = useState(false);
-    const [alertContent, setAlertContent] = useState('');
+    const [alertMessage, setAlertContent] = useState('');
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const { t } = useTranslation();
 
     let alertTimeoutID;
@@ -61,14 +64,19 @@ const App = () => {
 
         let reader = new FileReader();
         reader.onload = uploadLibrary;
-        reader.readAsText(fileInput.files[0]);
+        reader.readAsText(fileInput.files[0], 'utf-8');
+    }
+
+    function handleClearLibrary() {
+        library.forEach(({ id }) => handleDeleteAlbum(id));
     }
 
     function uploadLibrary(e) {
         const fileContent = e.target.result;
-        const albums = Object.values(JSON.parse(fileContent));
+        const collection = parseCollection(fileContent);
+        // const albums = Object.values(JSON.parse(fileContent));
 
-        albums.forEach((info) => handleAddAlbum(info));
+        collection.forEach((info) => handleAddAlbum(info));
     }
 
     async function handleAddAlbum(info) {
@@ -134,13 +142,24 @@ const App = () => {
         }, '3500');
     }
 
+    function openSidebar() {
+        setIsSidebarOpen(true);
+    }
+
+    function closeSidebar() {
+        setIsSidebarOpen(false);
+    }
+
     return (
         <CurrentUserContext.Provider value={{ currentUser, setCurrentUser }}>
             <div id="App">
                 <Header />
+                {isSidebarOpen && <Sidebar />}
                 <main>
                     <div className="controls-container">
                         <Summary total={library.length} displayed={libraryDisplay.length} />
+                        {/* <button onClick={openSidebar}>Open</button>
+                        <button onClick={closeSidebar}>Close</button> */}
                         <div className="controls">
                             <Filter onFilterChange={handleChangeFilter} />
                             <button
@@ -158,14 +177,14 @@ const App = () => {
 
                     {/* <input
                         type="file"
-                        accept=".json"
+                        accept=".csv"
                         name="file-loader"
                         id="file-loader"
                         onChange={handleUploadLibrary}
-                    /> */}
+                    />
+                    <button onClick={handleClearLibrary}>Clear Library</button> */}
                     <Table
                         content={libraryDisplay}
-                        filter={filter}
                         onOptionsModalOpened={openOptionsModal}
                         onToggleProp={handleEditAlbum}
                         onLibraryUploaded={handleUploadLibrary}
@@ -191,7 +210,7 @@ const App = () => {
                         onAlbumEdited={openAlbumModal}
                     />
                 )}
-                <AlertPopUp show={showAlertPopUp} content={alertContent} />
+                {showAlertPopUp && <AlertPopUp message={alertMessage} />}
             </div>
         </CurrentUserContext.Provider>
     );

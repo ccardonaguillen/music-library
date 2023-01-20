@@ -4,15 +4,13 @@ import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
 import '../styles/AlertPopUp.css';
 
 function AlertPopUp(props) {
-    const { show, content } = props;
+    const { message } = props;
 
     return (
-        show && (
-            <div id="alert-pop-up">
-                <FontAwesomeIcon icon={faCircleExclamation} />
-                <p>{content}</p>
-            </div>
-        )
+        <div id="alert-pop-up">
+            <FontAwesomeIcon icon={faCircleExclamation} />
+            <p>{message}</p>
+        </div>
     );
 }
 

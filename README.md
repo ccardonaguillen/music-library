@@ -4,28 +4,23 @@ Library to register all records (CD, Vynil or other formats) that the user owns 
 
 ## TO DO
 
--   Adaptar diseño para moviles
--   Escoger varios generos para un mismo disco
+-   Multiselect album genre
 
-## POSSIBLE FUTURE ADDITIONS
-
--   Filtros multiples? (opcion en columnas o como "etiquetas")
--   Menú filtrado (multiple) en barra lateral (Filtrar por.... "+ Añadir filtro...")
-
-## OPTIMIZATIONS
-
--   Cuando añades un album con formulario añadir elemento en la primera fila (mejorar visibilidad y solo actualizar esa fila: para esto es necesario modificar funcion \_renderAlbum para
-    poder especificar posicion
-
--   Cuando editas un album, actualizar solo album. Dos opciones:
-
-    1.  Utilizar la modificacion anterior para borrar y poner una fila en su lugar actualizando solo esta fila
-    2.  Crear/modificar funcion para actualizar contenido de la fila --> preferible esta opcion para usarla con iconos clicables
-
--   Añadir clases a las diferentes columnas para facilitar la seleccion en CSS
-
-# KNOWN BUGS
+## KNOWN BUGS
 
 -   Duplicated albums can be added
 -   Second fieldset of new album modal is cleared when "NO" is selected as an option in the "Do you own a copy?" input
 -   When applying filter with no coincidences message of collection with no albums in it appears. Change to correct message
+-   Clicking outside options modal to close it triggers other click events
+
+## IMPROVEMENTS AND OPTIMIZATIONS
+
+-   Group all modals as a HOC with similar behaviour (e.g. close when clicking outside modal)
+-   Create placeholder image when no album jacket is provided or found
+-   Remove "record info" entries from "extra-info" panel and/or those that are not provided (or leave as NA)
+-   Translate record formats (vynil, etc) and country (?) fields
+-   Split table by title/artist/release_year (a,b,c,... or by number of entries 1--50, 50--100,...) to improve rendering when sorting
+
+## POSSIBLE FUTURE ADDITIONS
+
+-   Multiple filters (in column headers or as "tag" system)

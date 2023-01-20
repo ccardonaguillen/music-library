@@ -1,0 +1,14 @@
+#sidebar {
+    z-index: 20;
+    opacity: 80%;
+    position: absolute;
+    width: 200px;
+    height: 100%;
+    background-color: blue;
+}
+
+@media screen and (max-width: 430px) {
+    #sidebar {
+        width: 100vw;
+    }
+}
