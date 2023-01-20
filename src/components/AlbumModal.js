@@ -237,13 +237,13 @@ function AlbumModal(props) {
                                     ]}
                                 />
                                 <InputField
-                                    id="catalog"
+                                    id="catalog_num"
                                     type="text"
-                                    label={t('fields.catalog.long')}
+                                    label={t('fields.catalog_num.long')}
                                     placeholder={t('common.exampleAbbr') + '1 C 072-04 097'}
                                 />
                                 <InputFieldWithSuggestions
-                                    id="record_label"
+                                    id="label"
                                     type="text"
                                     label={t('fields.label')}
                                     placeholder={t('common.exampleAbbr') + 'Apple Records'}

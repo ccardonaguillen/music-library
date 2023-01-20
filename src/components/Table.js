@@ -289,7 +289,7 @@ function ExtraInfoRow(props) {
 
     const recordInfo = [
         { key: 'catalog_num', label: t('fields.released.short'), icon: '' },
-        { key: 'record_label', label: t('fields.label'), icon: '' },
+        { key: 'label', label: t('fields.label'), icon: '' },
         { key: 'country', label: t('fields.country'), icon: '' },
         { key: 'edition', label: t('fields.edition.short'), icon: '' },
         { key: 'matrix', label: t('fields.matrix'), icon: '' },

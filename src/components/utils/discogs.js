@@ -20,7 +20,7 @@ function retrieveAlbumInfo(json) {
         catalog_num: labels[0].catno,
         edition: year,
         country,
-        record_label: labels[0].name,
+        label: labels[0].name,
         // jacket,
     };
 

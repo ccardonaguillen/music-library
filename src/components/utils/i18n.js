@@ -11,7 +11,7 @@ i18n
     // init i18next
     // for all options read: https://www.i18next.com/overview/configuration-options
     .init({
-        debug: true,
+        debug: false,
         fallbackLng: 'en',
         interpolation: {
             escapeValue: false, // not needed for react as it escapes by default
@@ -39,7 +39,7 @@ i18n
                             casette: 'Casette',
                             other: 'Other',
                         },
-                        catalog: {
+                        catalog_num: {
                             short: 'Catalog #',
                             long: 'Catalog Number',
                         },
@@ -157,7 +157,7 @@ i18n
                             casette: 'Casete',
                             other: 'Otro',
                         },
-                        catalog: {
+                        catalog_num: {
                             short: 'No. Catálogo',
                             long: 'Número Catálogo',
                         },

@@ -33,7 +33,7 @@ async function findAlbum(info) {
         getLibraryRef(),
         where('title', '==', info.title),
         where('artist', '==', info.artist),
-        where('release_year', '==', info.released)
+        where('released', '==', info.released)
     );
     const querySnapshot = await getDocs(q);
     return querySnapshot.docs.map((doc) => doc);

@@ -7,7 +7,7 @@ function Filter(props) {
     const placeholderList = {
         title: '"submarine"',
         artist: '"zeppelin", "beatles, rolling"',
-        release_year: '"1990", "1-2000", ">1900", "<1980"',
+        released: '"1990", "1-2000", ">1900", "<1980"',
         owned: '"true", "no", "not owned"',
         format: '"Vynil", "cd+casette", "vynil/CD"',
     };
@@ -51,7 +51,7 @@ function Filter(props) {
                     >
                         <option value="title">{t('fields.title')}</option>
                         <option value="artist">{t('fields.artist')}</option>
-                        <option value="release_year">{t('fields.released.short')}</option>
+                        <option value="released">{t('fields.released.short')}</option>
                         <option value="owned">{t('fields.owned')}</option>
                     </select>
                 </div>

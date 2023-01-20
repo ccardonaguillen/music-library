@@ -1,4 +1,3 @@
-
 function filterAlbum(album, filter) {
     const { by, value } = filter;
     switch (by) {
@@ -10,7 +9,7 @@ function filterAlbum(album, filter) {
             return artistList.some((artist) =>
                 album['artist'].toLowerCase().includes(artist.toLowerCase())
             );
-        case 'release_year':
+        case 'released':
             let match = (regex) => value.match(regex);
             // Regex for year for different release year filter
             const regexEq = /^\s*(\d+)\s*$/, // Single year value
@@ -19,15 +18,15 @@ function filterAlbum(album, filter) {
                 regexBtw = /(?:^(\d+)\s?[-,/;]\s?(\d+)$)/; //Two values interval
 
             if (match(regexEq)) {
-                return album['release_year'] === match(regexEq)[1];
+                return album['released'] === match(regexEq)[1];
             } else if (match(regexGt)) {
-                return album['release_year'] >= match(regexGt)[1];
+                return album['released'] >= match(regexGt)[1];
             } else if (match(regexLt)) {
-                return album['release_year'] <= match(regexLt)[1];
+                return album['released'] <= match(regexLt)[1];
             } else if (match(regexBtw)) {
                 return (
-                    album['release_year'] >= match(regexBtw)[1] &&
-                    album['release_year'] <= match(regexBtw)[2]
+                    album['released'] >= match(regexBtw)[1] &&
+                    album['released'] <= match(regexBtw)[2]
                 );
             } else {
                 return false;
@@ -73,4 +72,4 @@ function filterAlbum(album, filter) {
     }
 }
 
-export {filterAlbum}
+export { filterAlbum };
