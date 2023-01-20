@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, createRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faFileCircleXmark, faFilePen } from '@fortawesome/free-solid-svg-icons';
@@ -9,6 +9,27 @@ library.add(faFilePen, faFileCircleXmark);
 
 function OptionsModal(props) {
     const { show, pos, album, onModalClosed, onAlbumEdited, onAlbumDeleted } = props;
+    const modalRef = createRef();
+
+    function forceClose(e) {
+        console.log('click');
+        const modal = document.getElementById('options-modal');
+        if (!modal?.contains(e.target)) {
+            onModalClosed();
+            e.stopPropagation();
+            e.preventDefault();
+            return false;
+        }
+    }
+
+    useEffect(() => {
+        document.addEventListener('mousedown', forceClose);
+
+        return () => {
+            document.removeEventListener('mousedown', forceClose);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     if (!show) return null;
     return (
@@ -16,6 +37,7 @@ function OptionsModal(props) {
             id="options-modal"
             style={{ left: pos.x - 5, top: pos.y - 5 }}
             onMouseLeave={onModalClosed}
+            ref={modalRef}
         >
             <ul>
                 <li>

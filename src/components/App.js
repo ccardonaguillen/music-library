@@ -26,9 +26,9 @@ const App = () => {
     const [library, updateLibrary] = useReducer(libraryReducer, []);
     const [libraryDisplay, setLibraryDisplay] = useState([]);
     const [currentUser, setCurrentUser] = useState(null);
-    const [showAlbumModal, setShowAlbumModal] = useState(false);
+    const [isAlbumModalOpen, setIsAlbumModalOpen] = useState(false);
     const [albumModalMode, setAlbumModalMode] = useState({ name: 'new' });
-    const [showOptionsModal, setShowOptionsModal] = useState(false);
+    const [isOptionsModalOpen, setIsOptionsModalOpen] = useState(false);
     const [optionsModalPos, setOptionsModalPos] = useState({ x: 0, y: 0 });
     const [optionsModalAlbum, setOptionsModalAlbum] = useState('');
     const [showAlertPopUp, setShowAlertPopUp] = useState(false);
@@ -89,7 +89,7 @@ const App = () => {
 
     function handleDeleteAlbum(id) {
         deleteAlbum(id);
-        setShowOptionsModal(false);
+        setIsOptionsModalOpen(false);
         displayAlertPopUp(t('alerts.removed'));
     }
 
@@ -102,25 +102,25 @@ const App = () => {
         setFilter(newFilter);
     }
 
-    function displayAlbumModal(mode) {
+    function openAlbumModal(mode) {
         setAlbumModalMode(mode);
-        setShowAlbumModal(true);
+        setIsAlbumModalOpen(true);
     }
 
-    function hideAlbumModal(e) {
-        setShowAlbumModal(false);
+    function closeAlbumModal(e) {
+        setIsAlbumModalOpen(false);
     }
 
-    function displayOptionsModal({ event, album }) {
+    function openOptionsModal({ event, album }) {
         const x = event.pageX;
         const y = event.pageY;
         setOptionsModalPos({ x, y });
         setOptionsModalAlbum(album);
-        setShowOptionsModal(true);
+        setIsOptionsModalOpen(true);
     }
 
-    function hideOptionsModal(e) {
-        setShowOptionsModal(false);
+    function closeOptionsModal(e) {
+        setIsOptionsModalOpen(false);
     }
 
     function displayAlertPopUp(content) {
@@ -146,7 +146,7 @@ const App = () => {
                             <button
                                 className="interactive dark"
                                 id="open-modal"
-                                onClick={() => displayAlbumModal({ name: 'new' })}
+                                onClick={() => openAlbumModal({ name: 'new' })}
                             >
                                 <div>
                                     <FontAwesomeIcon icon={faPlus} />
@@ -166,7 +166,7 @@ const App = () => {
                     <Table
                         content={libraryDisplay}
                         filter={filter}
-                        onOptionsModalOpened={displayOptionsModal}
+                        onOptionsModalOpened={openOptionsModal}
                         onToggleProp={handleEditAlbum}
                         onLibraryUploaded={handleUploadLibrary}
                     />
@@ -174,21 +174,23 @@ const App = () => {
                 <Credits project="music-library" />
 
                 <AlbumModal
-                    show={showAlbumModal}
+                    show={isAlbumModalOpen}
                     mode={albumModalMode}
                     library={library}
-                    onModalClosed={hideAlbumModal}
+                    onModalClosed={closeAlbumModal}
                     onAlbumAdded={handleAddAlbum}
                     onAlbumEdited={handleEditAlbum}
                 />
-                <OptionsModal
-                    show={showOptionsModal}
-                    pos={optionsModalPos}
-                    album={optionsModalAlbum}
-                    onModalClosed={hideOptionsModal}
-                    onAlbumDeleted={handleDeleteAlbum}
-                    onAlbumEdited={displayAlbumModal}
-                />
+                {isOptionsModalOpen && (
+                    <OptionsModal
+                        show={isOptionsModalOpen}
+                        pos={optionsModalPos}
+                        album={optionsModalAlbum}
+                        onModalClosed={closeOptionsModal}
+                        onAlbumDeleted={handleDeleteAlbum}
+                        onAlbumEdited={openAlbumModal}
+                    />
+                )}
                 <AlertPopUp show={showAlertPopUp} content={alertContent} />
             </div>
         </CurrentUserContext.Provider>
